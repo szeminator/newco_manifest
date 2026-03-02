@@ -1,0 +1,630 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NewCo — Manifesto</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --black: #0a0a0a;
+    --white: #f5f2ec;
+    --accent: #c8ff00;
+    --mid: #1e1e1e;
+    --soft: #3a3a3a;
+    --muted: #7a7a7a;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--black);
+    color: var(--white);
+    font-family: 'Instrument Sans', sans-serif;
+    line-height: 1.6;
+    overflow-x: hidden;
+  }
+
+  /* HERO */
+  .hero {
+    min-height: 100vh;
+    display: grid;
+    place-items: center;
+    padding: 4rem 2rem;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse 80% 60% at 50% 50%, #1a2a00 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .noise {
+    position: fixed;
+    inset: 0;
+    opacity: 0.03;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='1'/%3E%3C/svg%3E");
+    background-size: 200px 200px;
+    pointer-events: none;
+    z-index: 100;
+  }
+
+  .hero-inner {
+    max-width: 900px;
+    text-align: center;
+    position: relative;
+    z-index: 1;
+  }
+
+  .label {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.7rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 2.5rem;
+    opacity: 0;
+    animation: fadeUp 0.8s 0.2s forwards;
+  }
+
+  .hero-headline {
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(2.8rem, 7vw, 6rem);
+    line-height: 1.08;
+    letter-spacing: -0.02em;
+    margin-bottom: 2.5rem;
+    opacity: 0;
+    animation: fadeUp 0.9s 0.4s forwards;
+  }
+
+  .hero-headline em {
+    font-style: italic;
+    color: var(--accent);
+  }
+
+  .hero-sub {
+    font-size: 1.1rem;
+    color: var(--muted);
+    max-width: 520px;
+    margin: 0 auto;
+    opacity: 0;
+    animation: fadeUp 0.9s 0.6s forwards;
+  }
+
+  .scroll-hint {
+    position: absolute;
+    bottom: 2.5rem;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.15em;
+    color: var(--soft);
+    text-transform: uppercase;
+    opacity: 0;
+    animation: fadeUp 1s 1.2s forwards;
+  }
+
+  .scroll-line {
+    width: 1px;
+    height: 40px;
+    background: linear-gradient(to bottom, var(--accent), transparent);
+    animation: scrollPulse 2s 1.5s infinite;
+  }
+
+  /* SECTIONS */
+  section {
+    padding: 6rem 2rem;
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+
+  .section-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .section-label::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--soft);
+    max-width: 80px;
+  }
+
+  /* TRANSFORMATION BLOCK */
+  .transform-section {
+    border-top: 1px solid var(--soft);
+  }
+
+  .transform-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2px;
+    margin-top: 3rem;
+  }
+
+  .transform-card {
+    background: var(--mid);
+    padding: 2.5rem;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .transform-card.accent-card {
+    background: var(--accent);
+    color: var(--black);
+  }
+
+  .transform-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at top right, rgba(200,255,0,0.05), transparent 60%);
+    pointer-events: none;
+  }
+
+  .transform-card.accent-card::before {
+    background: radial-gradient(circle at bottom left, rgba(0,0,0,0.1), transparent 60%);
+  }
+
+  .card-tag {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.6rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 1rem;
+  }
+
+  .accent-card .card-tag {
+    color: rgba(0,0,0,0.5);
+  }
+
+  .card-stat {
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(2.5rem, 5vw, 4.5rem);
+    line-height: 1;
+    letter-spacing: -0.03em;
+    margin-bottom: 0.75rem;
+    color: var(--accent);
+  }
+
+  .accent-card .card-stat {
+    color: var(--black);
+  }
+
+  .card-body {
+    font-size: 0.95rem;
+    color: var(--muted);
+    line-height: 1.6;
+  }
+
+  .accent-card .card-body {
+    color: rgba(0,0,0,0.7);
+  }
+
+  .big-statement {
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(1.8rem, 4vw, 3rem);
+    line-height: 1.2;
+    letter-spacing: -0.02em;
+    margin-top: 3rem;
+    max-width: 700px;
+  }
+
+  /* WHAT WE DO */
+  .pillars {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2px;
+    margin-top: 3rem;
+  }
+
+  .pillar {
+    background: var(--mid);
+    padding: 2rem;
+    position: relative;
+  }
+
+  .pillar-number {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.65rem;
+    color: var(--accent);
+    margin-bottom: 1.5rem;
+    display: block;
+  }
+
+  .pillar h3 {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.4rem;
+    line-height: 1.2;
+    margin-bottom: 1rem;
+    letter-spacing: -0.01em;
+  }
+
+  .pillar p {
+    font-size: 0.9rem;
+    color: var(--muted);
+    line-height: 1.7;
+  }
+
+  .pillar-bar {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background: var(--accent);
+    transition: width 0.6s ease;
+  }
+
+  .pillar:hover .pillar-bar { width: 100%; }
+
+  /* HOW WE WORK */
+  .split-section {
+    border-top: 1px solid var(--soft);
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6rem;
+    align-items: start;
+  }
+
+  .split-text h2 {
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(1.8rem, 3vw, 2.8rem);
+    line-height: 1.2;
+    letter-spacing: -0.02em;
+    margin-bottom: 1.5rem;
+  }
+
+  .split-text p {
+    color: var(--muted);
+    font-size: 0.95rem;
+    line-height: 1.8;
+    margin-bottom: 1rem;
+  }
+
+  .spectrum {
+    padding-top: 6rem;
+  }
+
+  .spectrum-bar {
+    height: 4px;
+    background: linear-gradient(to right, var(--soft), var(--accent));
+    border-radius: 2px;
+    margin-bottom: 1.5rem;
+    position: relative;
+  }
+
+  .spectrum-bar::after {
+    content: '';
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translate(50%, -50%);
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: var(--accent);
+    box-shadow: 0 0 20px var(--accent);
+  }
+
+  .spectrum-labels {
+    display: flex;
+    justify-content: space-between;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--soft);
+  }
+
+  .spectrum-headline {
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(1.3rem, 2.5vw, 2rem);
+    line-height: 1.3;
+    margin-top: 2.5rem;
+    letter-spacing: -0.01em;
+  }
+
+  .spectrum-sub {
+    color: var(--muted);
+    font-size: 0.9rem;
+    margin-top: 0.75rem;
+    line-height: 1.7;
+  }
+
+  /* NOT US */
+  .not-us-section {
+    border-top: 1px solid var(--soft);
+  }
+
+  .not-us-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2px;
+    margin-top: 3rem;
+  }
+
+  .not-card {
+    background: var(--mid);
+    padding: 2rem;
+  }
+
+  .not-card .x {
+    font-family: 'DM Mono', monospace;
+    font-size: 1.2rem;
+    color: var(--soft);
+    margin-bottom: 1rem;
+    display: block;
+  }
+
+  .not-card h4 {
+    font-size: 1rem;
+    font-weight: 600;
+    margin-bottom: 0.75rem;
+    color: var(--white);
+  }
+
+  .not-card p {
+    font-size: 0.85rem;
+    color: var(--muted);
+    line-height: 1.6;
+  }
+
+  /* CLOSING */
+  .closing {
+    border-top: 1px solid var(--soft);
+    text-align: center;
+    padding-top: 8rem;
+    padding-bottom: 8rem;
+  }
+
+  .closing-headline {
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(2.5rem, 6vw, 5.5rem);
+    line-height: 1.1;
+    letter-spacing: -0.03em;
+    max-width: 800px;
+    margin: 0 auto 2rem;
+  }
+
+  .closing-headline em {
+    font-style: italic;
+    color: var(--accent);
+  }
+
+  .closing-sub {
+    color: var(--muted);
+    font-size: 1rem;
+    max-width: 460px;
+    margin: 0 auto 3rem;
+    line-height: 1.7;
+  }
+
+  .tag-row {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+
+  .tag {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.7rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    border: 1px solid var(--soft);
+    padding: 0.5rem 1rem;
+    color: var(--muted);
+  }
+
+  .tag.accent {
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+
+  /* FOOTER */
+  footer {
+    border-top: 1px solid var(--soft);
+    padding: 2rem;
+    max-width: 1100px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  footer span {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.15em;
+    color: var(--soft);
+    text-transform: uppercase;
+  }
+
+  /* ANIMATIONS */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes scrollPulse {
+    0%, 100% { opacity: 0.3; }
+    50%       { opacity: 1; }
+  }
+
+  .reveal {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.8s ease, transform 0.8s ease;
+  }
+
+  .reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* RESPONSIVE */
+  @media (max-width: 768px) {
+    .transform-grid,
+    .pillars,
+    .not-us-grid { grid-template-columns: 1fr; }
+    .split-section { grid-template-columns: 1fr; gap: 3rem; }
+    .spectrum { padding-top: 0; }
+  }
+</style>
+</head>
+<body>
+<div class="noise"></div>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-inner">
+    <p class="label">NewCo — Manifesto</p>
+    <h1 class="hero-headline">
+      Wir glauben, dass Software nicht mehr von der <em>Anzahl der Menschen</em> abhängt, die sie bauen.
+    </h1>
+    <p class="hero-sub">Agentisch denken. Menschlich umsetzen. Outcomes liefern.</p>
+  </div>
+  <div class="scroll-hint">
+    <div class="scroll-line"></div>
+    <span>Scroll</span>
+  </div>
+</div>
+
+<!-- TRANSFORMATION -->
+<section class="transform-section reveal">
+  <div class="section-label">01 — Was sich verändert</div>
+  <div class="transform-grid">
+    <div class="transform-card">
+      <div class="card-tag">Gestern</div>
+      <div class="card-stat">10×18</div>
+      <div class="card-body">Zehn Entwickler. Achtzehn Monate. Ein Projekt. Das war der Standard für individuelle Softwareentwicklung.</div>
+    </div>
+    <div class="transform-card accent-card">
+      <div class="card-tag">Heute</div>
+      <div class="card-stat">2×6</div>
+      <div class="card-body">Zwei Engineers. Sechs Wochen. Dasselbe Ergebnis. Mit AI-Agenten als Werkzeug, nicht als Versprechen.</div>
+    </div>
+  </div>
+  <p class="big-statement reveal">Das ist nicht Zukunft. Das ist jetzt — und wir bauen unsere Firma genau auf diesem neuen Prozess auf.</p>
+</section>
+
+<!-- WHAT WE DO -->
+<section class="reveal">
+  <div class="section-label">02 — Was wir machen</div>
+  <div class="pillars">
+    <div class="pillar">
+      <div class="pillar-bar"></div>
+      <span class="pillar-number">001</span>
+      <h3>Wir starten wo der Schmerz ist</h3>
+      <p>Was kostet euch gerade am meisten Zeit, Geld oder Nerven? Dafür bauen wir eine Lösung. Schnell. Messbar. Ohne Overkill.</p>
+    </div>
+    <div class="pillar">
+      <div class="pillar-bar"></div>
+      <span class="pillar-number">002</span>
+      <h3>Wir automatisieren eure Abläufe</h3>
+      <p>Von einfachen Workflow-Automationen bis zu komplexen Agent-Pipelines — wir finden heraus wo Agenten echten Mehrwert bringen und setzen es um.</p>
+    </div>
+    <div class="pillar">
+      <div class="pillar-bar"></div>
+      <span class="pillar-number">003</span>
+      <h3>Wir bauen Software — nur anders</h3>
+      <p>Individuelle Software, ohne Entwicklungsarmee. Kleines Team, hoher AI-Leverage, gleiche Qualität. Der Prozess ist ein anderer, das Ergebnis nicht.</p>
+    </div>
+  </div>
+</section>
+
+<!-- HOW WE WORK -->
+<section class="split-section reveal">
+  <div class="split-text">
+    <div class="section-label">03 — Wie wir arbeiten</div>
+    <h2>Hybrid. Menschlich wo es zählt. Agentisch wo es skaliert.</h2>
+    <p>Vertrauen entsteht durch Menschen, durch Gespräche, durch Präsenz. Gerade im DACH-Raum, wo Geschäftsbeziehungen auf persönlichem Vertrauen aufgebaut werden, ist das kein Nachteil — es ist unser Heimvorteil.</p>
+    <p>Wir sind persönlich da beim Kennenlernen, beim Verstehen des Problems, beim Durchdenken der Lösung mit dem Fachbereich. Und wir setzen mit Agenten um wo sie schneller und besser sind als jeder Mensch es sein könnte.</p>
+  </div>
+  <div class="spectrum">
+    <div class="spectrum-bar"></div>
+    <div class="spectrum-labels">
+      <span>Mensch</span>
+      <span>Agent</span>
+    </div>
+    <p class="spectrum-headline">Der Anteil der Agenten an unserer Arbeit wächst mit jedem Projekt.</p>
+    <p class="spectrum-sub">Das ist kein Risiko. Das ist unser Geschäftsmodell.</p>
+  </div>
+</section>
+
+<!-- NOT US -->
+<section class="not-us-section reveal">
+  <div class="section-label">04 — Wer wir nicht sind</div>
+  <div class="not-us-grid">
+    <div class="not-card">
+      <span class="x">×</span>
+      <h4>Keine große Softwarefirma</h4>
+      <p>Wer compliance-konforme Software mit ISO-Zertifizierung und hundert Mitarbeitern braucht, kennen wir die richtigen Partner.</p>
+    </div>
+    <div class="not-card">
+      <span class="x">×</span>
+      <h4>Keine Tool-Verkäufer</h4>
+      <p>Jede Lösung die wir bauen, bauen wir so, dass ihr sie versteht, besitzt und weiterentwickeln könnt. Keine Black Box.</p>
+    </div>
+    <div class="not-card">
+      <span class="x">×</span>
+      <h4>Keine Buzzword-Berater</h4>
+      <p>Wir zeigen was in eurer konkreten Situation funktioniert — und was nicht. Report hinterlassen und verschwinden ist nicht unser Modell.</p>
+    </div>
+  </div>
+</section>
+
+<!-- CLOSING -->
+<section class="closing reveal">
+  <h2 class="closing-headline">Pragmatisch. Ohne Hype. <em>Echte Umsetzung.</em></h2>
+  <p class="closing-sub">Die nächsten Jahre entscheiden, welche Unternehmen in einem Jahrzehnt noch relevant sind. Wir begleiten sie durch diesen Wandel — im DACH-Raum und darüber hinaus.</p>
+  <div class="tag-row">
+    <span class="tag accent">AI-First</span>
+    <span class="tag">Individualsoftware</span>
+    <span class="tag">Prozessautomation</span>
+    <span class="tag">DACH + beyond</span>
+    <span class="tag accent">Agentisch bauen</span>
+  </div>
+</section>
+
+<footer>
+  <span>NewCo — Manifesto</span>
+  <span>Draft v0.3 — intern</span>
+</footer>
+
+<script>
+  const reveals = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach((entry, i) => {
+      if (entry.isIntersecting) {
+        setTimeout(() => entry.target.classList.add('visible'), i * 80);
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.1 });
+
+  reveals.forEach(el => observer.observe(el));
+</script>
+</body>
+</html>
