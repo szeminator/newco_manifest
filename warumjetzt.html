@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CORTEX — Warum Jetzt?</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --black: #0a0a0a; --white: #f5f2ec; --accent: #c8ff00;
+    --mid: #1e1e1e; --soft: #3a3a3a; --muted: #7a7a7a;
+    --orange: #ff8c42; --purple: #7c6fff;
+  }
+  html { scroll-behavior: smooth; }
+  body { background: var(--black); color: var(--white); font-family: 'Instrument Sans', sans-serif; line-height: 1.6; overflow-x: hidden; }
+  .noise { position: fixed; inset: 0; opacity: 0.03; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"); background-size: 200px; pointer-events: none; z-index: 100; }
+
+  .hero { min-height: 100vh; display: grid; place-items: center; padding: 4rem 2rem; position: relative; overflow: hidden; }
+  .hero::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse 70% 50% at 50% 60%, rgba(124,111,255,0.1) 0%, transparent 70%); pointer-events: none; }
+  .hero-inner { max-width: 860px; text-align: center; position: relative; z-index: 1; }
+  .label { font-family: 'DM Mono', monospace; font-size: 0.7rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--accent); margin-bottom: 2.5rem; opacity: 0; animation: fadeUp 0.8s 0.2s forwards; }
+  .hero-headline { font-family: 'DM Serif Display', serif; font-size: clamp(3rem, 8vw, 7rem); line-height: 1.0; letter-spacing: -0.03em; margin-bottom: 2rem; opacity: 0; animation: fadeUp 0.9s 0.4s forwards; }
+  .hero-headline em { font-style: italic; color: var(--accent); }
+  .hero-sub { font-size: 1.05rem; color: var(--muted); max-width: 560px; margin: 0 auto 3rem; line-height: 1.8; opacity: 0; animation: fadeUp 0.9s 0.6s forwards; }
+  .hero-quote { font-family: 'DM Serif Display', serif; font-style: italic; font-size: clamp(1rem, 2.2vw, 1.35rem); color: var(--muted); border-left: 2px solid var(--soft); padding-left: 1.5rem; text-align: left; max-width: 600px; margin: 0 auto; opacity: 0; animation: fadeUp 0.9s 0.8s forwards; }
+  .hero-quote span { color: var(--white); font-style: normal; }
+  .scroll-hint { position: absolute; bottom: 2.5rem; left: 50%; transform: translateX(-50%); display: flex; flex-direction: column; align-items: center; gap: 0.5rem; font-family: 'DM Mono', monospace; font-size: 0.65rem; letter-spacing: 0.15em; color: var(--soft); text-transform: uppercase; opacity: 0; animation: fadeUp 1s 1.4s forwards; }
+  .scroll-line { width: 1px; height: 40px; background: linear-gradient(to bottom, var(--accent), transparent); animation: scrollPulse 2s 1.5s infinite; }
+
+  section { padding: 6rem 2rem; max-width: 1100px; margin: 0 auto; }
+  .section-label { font-family: 'DM Mono', monospace; font-size: 0.65rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--accent); margin-bottom: 2rem; display: flex; align-items: center; gap: 1rem; }
+  .section-label::after { content: ''; flex: 1; height: 1px; background: var(--soft); max-width: 80px; }
+
+  /* TIPPING */
+  .tipping-section { border-top: 1px solid var(--soft); }
+  .tipping-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 2px; margin-top: 3rem; }
+  .tipping-card { background: var(--mid); padding: 2.5rem 2rem; position: relative; overflow: hidden; }
+  .tipping-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; }
+  .tipping-card.past::before { background: var(--soft); }
+  .tipping-card.now::before { background: var(--orange); box-shadow: 0 0 20px var(--orange); }
+  .tipping-card.future::before { background: var(--accent); }
+  .t-year { font-family: 'DM Mono', monospace; font-size: 0.65rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted); margin-bottom: 1rem; }
+  .tipping-card.now .t-year { color: var(--orange); }
+  .tipping-card.future .t-year { color: var(--accent); }
+  .t-horizon { font-family: 'DM Serif Display', serif; font-size: clamp(2rem, 4vw, 3.5rem); line-height: 1; letter-spacing: -0.03em; margin-bottom: 1rem; color: var(--soft); }
+  .tipping-card.now .t-horizon { color: var(--orange); }
+  .tipping-card.future .t-horizon { color: var(--accent); }
+  .t-quote { font-size: 0.9rem; color: var(--muted); line-height: 1.6; font-style: italic; margin-bottom: 1rem; border-left: 1px solid var(--soft); padding-left: 1rem; }
+  .tipping-card.now .t-quote { border-left-color: var(--orange); }
+  .t-desc { font-size: 0.85rem; color: var(--muted); line-height: 1.6; }
+
+  /* CHART */
+  .chart-section { border-top: 1px solid var(--soft); }
+  .chart-intro { display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: center; margin-bottom: 3rem; }
+  .chart-intro h2 { font-family: 'DM Serif Display', serif; font-size: clamp(1.8rem, 3vw, 2.8rem); line-height: 1.2; letter-spacing: -0.02em; }
+  .chart-intro p { color: var(--muted); font-size: 0.95rem; line-height: 1.8; margin-top: 1rem; }
+  .chart-source { font-family: 'DM Mono', monospace; font-size: 0.6rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--soft); margin-top: 0.75rem; }
+  .chart-container { background: var(--mid); padding: 2.5rem; }
+  .chart-title { font-family: 'DM Mono', monospace; font-size: 0.7rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--purple); text-align: center; margin-bottom: 0.4rem; }
+  .chart-subtitle { font-size: 0.8rem; color: var(--muted); text-align: center; margin-bottom: 2rem; }
+
+  /* SPIDER */
+  .spider-section { border-top: 1px solid var(--soft); }
+  .spider-intro { text-align: center; max-width: 600px; margin: 0 auto 3rem; }
+  .spider-intro h2 { font-family: 'DM Serif Display', serif; font-size: clamp(1.8rem, 3vw, 2.8rem); line-height: 1.2; letter-spacing: -0.02em; margin-bottom: 1rem; }
+  .spider-intro p { color: var(--muted); font-size: 0.95rem; line-height: 1.8; }
+  .spider-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2px; }
+  .spider-card { background: var(--mid); padding: 2rem; display: flex; flex-direction: column; align-items: center; }
+  .spider-year { font-family: 'DM Mono', monospace; font-size: 0.65rem; letter-spacing: 0.2em; text-transform: uppercase; margin-bottom: 1.5rem; display: flex; align-items: center; gap: 0.75rem; align-self: flex-start; }
+  .spider-year.past { color: var(--muted); }
+  .spider-year.now { color: var(--accent); }
+  .year-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+  .spider-year.past .year-dot { background: var(--soft); }
+  .spider-year.now .year-dot { background: var(--accent); box-shadow: 0 0 10px var(--accent); }
+
+  /* CONCLUSION */
+  .conclusion-section { border-top: 1px solid var(--soft); }
+  .conclusion-inner { display: grid; grid-template-columns: 1fr 1fr; gap: 6rem; align-items: center; }
+  .conclusion-text h2 { font-family: 'DM Serif Display', serif; font-size: clamp(2rem, 4vw, 3.5rem); line-height: 1.1; letter-spacing: -0.03em; margin-bottom: 1.5rem; }
+  .conclusion-text h2 em { font-style: italic; color: var(--accent); }
+  .conclusion-text p { color: var(--muted); font-size: 0.95rem; line-height: 1.8; margin-bottom: 1rem; }
+  .stat-stack { display: flex; flex-direction: column; gap: 2px; }
+  .stat-row { background: var(--mid); padding: 1.5rem 2rem; display: flex; justify-content: space-between; align-items: center; gap: 1rem; }
+  .stat-row.highlight { border-left: 2px solid var(--accent); }
+  .stat-val { font-family: 'DM Serif Display', serif; font-size: 2.5rem; letter-spacing: -0.03em; color: var(--accent); flex-shrink: 0; }
+  .stat-row.highlight .stat-val { color: var(--accent); }
+  .stat-label { font-size: 0.85rem; color: var(--muted); text-align: right; line-height: 1.4; }
+  .stat-row.highlight .stat-label { color: var(--white); }
+
+  footer { border-top: 1px solid var(--soft); padding: 2rem; max-width: 1100px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; }
+  footer span { font-family: 'DM Mono', monospace; font-size: 0.65rem; letter-spacing: 0.15em; color: var(--soft); text-transform: uppercase; }
+
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: translateY(0); } }
+  @keyframes scrollPulse { 0%, 100% { opacity: 0.3; } 50% { opacity: 1; } }
+  .reveal { opacity: 0; transform: translateY(30px); transition: opacity 0.8s ease, transform 0.8s ease; }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
+
+  @media (max-width: 768px) {
+    .tipping-grid, .spider-grid, .chart-intro, .conclusion-inner { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+<div class="noise"></div>
+
+<div class="hero">
+  <div class="hero-inner">
+    <p class="label">CORTEX — Warum jetzt?</p>
+    <h1 class="hero-headline">2026 ist<br><em>kein Zufall.</em></h1>
+    <p class="hero-sub">KI-Agenten haben einen Tipping Point überschritten. Was 2024 noch eine valide Ausrede war, ist heute keine mehr.</p>
+    <blockquote class="hero-quote">
+      "Warum soll ich der KI erst erklären was ich will —<br>
+      <span>in der Zeit hätte ich die Mail selbst geschrieben."</span>
+      <br><br>
+      <span style="font-size:0.8rem; color:var(--muted); font-style:normal;">— Das war 2024 noch richtig. Heute nicht mehr.</span>
+    </blockquote>
+  </div>
+  <div class="scroll-hint"><div class="scroll-line"></div><span>Scroll</span></div>
+</div>
+
+<!-- TIPPING POINT -->
+<section class="tipping-section reveal">
+  <div class="section-label">01 — Der Tipping Point</div>
+  <div class="tipping-grid">
+    <div class="tipping-card past">
+      <div class="t-year">2024</div>
+      <div class="t-horizon">~1 Std</div>
+      <div class="t-quote">"In der Zeit hätte ich die Mail selbst geschrieben."</div>
+      <div class="t-desc">KI erledigte einfache, kurze Aufgaben. Der Overhead war oft größer als der Nutzen. Der Einwand war berechtigt.</div>
+    </div>
+    <div class="tipping-card now">
+      <div class="t-year">⚡ Heute — 2026</div>
+      <div class="t-horizon">14h 30m</div>
+      <div class="t-quote">"Das hätte ich selbst nie in dieser Zeit geschafft."</div>
+      <div class="t-desc">Claude Opus 4.6 löst Software-Tasks mit einem Zeithorizont von 14 Stunden 30 Minuten. Der Overhead ist minimal. Der Einwand zieht nicht mehr. Das ist der Moment.</div>
+    </div>
+    <div class="tipping-card future">
+      <div class="t-year">Ende 2026 — Projektion</div>
+      <div class="t-horizon">~12 Tage</div>
+      <div class="t-quote">"Das hätte ein Team Wochen gebraucht."</div>
+      <div class="t-desc">Laut METR-Projektion: KI-Agenten lösen Aufgaben die einem Menschen 12 Arbeitstage kosten. Ganze Projektphasen werden agentisch.</div>
+    </div>
+  </div>
+</section>
+
+<!-- METR CHART -->
+<section class="chart-section reveal">
+  <div class="section-label">02 — Die Kurve</div>
+  <div class="chart-intro">
+    <div>
+      <h2>Exponentiell.<br>Nicht linear.</h2>
+      <p>METR misst seit 2023 wie lange eine Aufgabe dauern darf damit KI sie zu 50% löst — der sogenannte Task Horizon. Die Kurve wächst exponentiell. Und sie bricht nicht ab.</p>
+      <p class="chart-source">Quelle: METR — metr.org/time-horizons — Stand März 2026</p>
+    </div>
+    <div style="background:var(--mid); padding:1.5rem;">
+      <div style="font-family:'DM Mono',monospace; font-size:0.65rem; letter-spacing:0.1em; text-transform:uppercase; color:var(--muted); margin-bottom:0.75rem;">Was das bedeutet</div>
+      <p style="font-size:0.88rem; color:var(--muted); line-height:1.7;">Eine Aufgabe die ein Mensch in <strong style="color:var(--white)">3 Stunden</strong> erledigt — KI schafft das heute mit 50% Zuverlässigkeit. Ende 2026 werden das <strong style="color:var(--accent)">12 Arbeitstage</strong> sein — ein ganzer Sprint.</p>
+    </div>
+  </div>
+  <div class="chart-container">
+    <div class="chart-title">METR 50% Task Horizon</div>
+    <div class="chart-subtitle">Wie lange darf eine Aufgabe dauern, damit KI sie zu 50% löst?</div>
+    <canvas id="metrChart" height="360"></canvas>
+  </div>
+</section>
+
+<!-- SPIDER -->
+<section class="spider-section reveal">
+  <div class="section-label">03 — Nicht nur Software</div>
+  <div class="spider-intro">
+    <h2>Der Radius wächst in alle Richtungen.</h2>
+    <p>2025 war KI gut in Software und okay in ein paar anderen Bereichen. 2026 ist das Netz fast vollständig ausgefüllt — Recht, Finanzen, Life Sciences, Sprachen, Mathe. Es geht nicht mehr nur um Code.</p>
+  </div>
+  <div class="spider-grid">
+    <div class="spider-card">
+      <div class="spider-year past"><div class="year-dot"></div>Mitte 2025</div>
+      <canvas id="spider2025" width="420" height="360"></canvas>
+    </div>
+    <div class="spider-card">
+      <div class="spider-year now"><div class="year-dot"></div>Heute 2026</div>
+      <canvas id="spider2026" width="420" height="360"></canvas>
+    </div>
+  </div>
+</section>
+
+<!-- CONCLUSION -->
+<section class="conclusion-section reveal">
+  <div class="section-label">04 — Was das für CORTEX bedeutet</div>
+  <div class="conclusion-inner">
+    <div class="conclusion-text">
+      <h2>Wir gründen im <em>Fenster.</em></h2>
+      <p>Nicht zu früh — 2023 war der Einwand "zu viel Overhead" noch berechtigt. Nicht zu spät — in zwei Jahren ist der Markt gesättigt und das Wissen Commodity.</p>
+      <p>Jetzt ist der Moment wo Unternehmen beginnen zu verstehen dass KI kein Nischenthema mehr ist — aber noch nicht wissen wie sie es umsetzen sollen. Das ist unser Spielfeld.</p>
+      <p>Wir haben das Wissen, das Netzwerk, und den richtigen Moment. Das Fenster ist offen. Es wird nicht offen bleiben.</p>
+    </div>
+    <div class="stat-stack">
+      <div class="stat-row">
+        <div class="stat-val">3×</div>
+        <div class="stat-label">Task Horizon verdreifacht sich jedes Jahr laut METR-Trend</div>
+      </div>
+      <div class="stat-row">
+        <div class="stat-val">9</div>
+        <div class="stat-label">Domänen in denen KI heute auf 75%+ Niveau arbeitet</div>
+      </div>
+      <div class="stat-row">
+        <div class="stat-val">2026</div>
+        <div class="stat-label">Das Jahr wo der Overhead-Einwand endgültig wegfällt</div>
+      </div>
+      <div class="stat-row highlight">
+        <div class="stat-val">Jetzt</div>
+        <div class="stat-label">Der richtige Zeitpunkt um diese Firma zu gründen</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <span>CORTEX — Warum Jetzt</span>
+  <span>v0.1 — intern</span>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<script>
+// METR CURVE — Modell-basierte Datenpunkte aus METR changelog
+const metrCtx = document.getElementById('metrChart').getContext('2d');
+
+// Echte Modelle mit approx. Task Horizon Werten (aus METR TH 1.0 / 1.1)
+// X-Achse: Datum, Y-Achse: Stunden (log)
+const models = [
+  { label: 'GPT-4\nMär 2023',        date: '2023-03', hours: 0.5,  color: '#7a7a7a' },
+  { label: 'Claude 2\nJul 2023',      date: '2023-07', hours: 0.6,  color: '#7a7a7a' },
+  { label: 'GPT-4o\nMai 2024',        date: '2024-05', hours: 0.8,  color: '#7a7a7a' },
+  { label: 'Claude 3.5 S.\nJun 2024', date: '2024-06', hours: 1.0,  color: '#7a7a7a' },
+  { label: 'o1\nSep 2024',            date: '2024-09', hours: 1.5,  color: '#7a7a7a' },
+  { label: 'Claude 3.5 S. v2\nOkt 2024', date: '2024-10', hours: 1.8, color: '#7a7a7a' },
+  { label: 'o3\nApr 2025',            date: '2025-04', hours: 3.5,  color: '#7a7a7a' },
+  { label: 'GPT-5\nAug 2025',         date: '2025-08', hours: 5.0,  color: '#7a7a7a' },
+  { label: 'Claude Opus 4.1\nAug 2025', date: '2025-08b', hours: 4.2, color: '#7a7a7a' },
+  { label: 'Claude Sonnet 4.5\nSep 2025', date: '2025-09', hours: 5.5, color: '#7a7a7a' },
+  { label: 'Grok-4\nJul 2025',        date: '2025-07', hours: 6.0,  color: '#7a7a7a' },
+  { label: 'Claude Opus 4.5\nDez 2025', date: '2025-12', hours: 9.0, color: '#7a7a7a' },
+  { label: 'Claude Opus 4.6\nFeb 2026 ★', date: '2026-02', hours: 14.5, color: '#c8ff00', highlight: true },
+];
+
+// Projektion
+const projModels = [
+  { date: '2026-02', hours: 14.5 },
+  { date: '2026-12', hours: 96 }, // ~12 Arbeitstage
+];
+
+const allLabels = models.map(m => m.label);
+const realHours = models.map(m => m.hours);
+const projHours = [...Array(models.length - 1).fill(null), 14.5, 96];
+// Add projection label
+allLabels.push('Ende 2026\n(Projektion)');
+realHours.push(null);
+
+new Chart(metrCtx, {
+  type: 'line',
+  data: {
+    labels: allLabels,
+    datasets: [
+      {
+        label: 'Task Horizon (50% Erfolg)',
+        data: realHours,
+        borderColor: '#ff8c42',
+        backgroundColor: (ctx) => {
+          const g = ctx.chart.ctx.createLinearGradient(0, 0, 0, 420);
+          g.addColorStop(0, 'rgba(255,140,66,0.12)');
+          g.addColorStop(1, 'rgba(255,140,66,0)');
+          return g;
+        },
+        pointBackgroundColor: models.map(m => m.highlight ? '#c8ff00' : '#ff8c42').concat([null]),
+        pointRadius: models.map(m => m.highlight ? 9 : 5).concat([0]),
+        pointHoverRadius: 8,
+        tension: 0.4,
+        fill: true,
+        spanGaps: false,
+      },
+      {
+        label: 'Projektion Ende 2026',
+        data: projHours,
+        borderColor: '#c8ff00',
+        borderDash: [7, 4],
+        backgroundColor: 'transparent',
+        pointBackgroundColor: (ctx) => ctx.dataIndex === allLabels.length - 1 ? '#c8ff00' : 'transparent',
+        pointRadius: (ctx) => ctx.dataIndex === allLabels.length - 1 ? 8 : 0,
+        tension: 0.4,
+        fill: false,
+        spanGaps: false,
+      }
+    ]
+  },
+  options: {
+    responsive: true,
+    interaction: { mode: 'index', intersect: false },
+    plugins: {
+      legend: { labels: { color: '#7a7a7a', font: { family: 'DM Mono', size: 11 }, boxWidth: 20, padding: 20 } },
+      tooltip: {
+        backgroundColor: '#1e1e1e', titleColor: '#f5f2ec', bodyColor: '#7a7a7a',
+        borderColor: '#3a3a3a', borderWidth: 1, padding: 12,
+        callbacks: {
+          title: (items) => items[0].label.replace(/\n/g, ' — '),
+          label: (ctx) => {
+            if (ctx.parsed.y === null) return '';
+            const v = ctx.parsed.y;
+            if (v < 1) return ` ~${Math.round(v*60)} Minuten`;
+            if (v < 8) return ` ~${v.toFixed(1)} Stunden`;
+            if (v < 24) return ` ~${v.toFixed(0)} Stunden (~${(v/8).toFixed(1)} Arbeitstage)`;
+            return ` ~${(v/8).toFixed(0)} Arbeitstage`;
+          }
+        }
+      }
+    },
+    scales: {
+      x: {
+        ticks: {
+          color: '#7a7a7a', font: { family: 'DM Mono', size: 9 },
+          maxRotation: 45, minRotation: 30,
+          callback: function(val, idx) {
+            // Shorten label for axis — only show model name, not date
+            const raw = this.getLabelForValue(val);
+            return raw ? raw.split('\n')[0] : '';
+          }
+        },
+        grid: { color: 'rgba(58,58,58,0.3)' }
+      },
+      y: {
+        type: 'logarithmic',
+        min: 0.3,
+        max: 200,
+        ticks: {
+          color: '#7a7a7a', font: { family: 'DM Mono', size: 10 },
+          callback: (v) => {
+            const map = { 0.5: '30 Min', 1: '1 Std', 8: '1 Tag', 14.5: '14h 30m ★', 96: '12 Tage' };
+            return map[v] !== undefined ? map[v] : '';
+          }
+        },
+        grid: { color: 'rgba(58,58,58,0.3)' }
+      }
+    }
+  }
+});
+
+// SPIDER CHARTS
+const spiderLabels = ['Software', 'Recht', 'Vertragsreview', 'Life Sciences', 'Mathe', 'Sprachen', 'Finanzen'];
+
+function drawSpider(id, values, color, glow) {
+  const canvas = document.getElementById(id);
+  const ctx = canvas.getContext('2d');
+  const W = canvas.width, H = canvas.height;
+  const cx = W / 2, cy = H / 2 + 15;
+  const R = Math.min(W, H) * 0.34;
+  const n = spiderLabels.length;
+  const step = (Math.PI * 2) / n;
+  const start = -Math.PI / 2;
+
+  ctx.clearRect(0, 0, W, H);
+
+  // Grid
+  for (let ring = 1; ring <= 4; ring++) {
+    ctx.beginPath();
+    for (let i = 0; i <= n; i++) {
+      const a = start + i * step;
+      const r = R * ring / 4;
+      i === 0 ? ctx.moveTo(cx + r * Math.cos(a), cy + r * Math.sin(a))
+               : ctx.lineTo(cx + r * Math.cos(a), cy + r * Math.sin(a));
+    }
+    ctx.closePath();
+    ctx.strokeStyle = ring === 4 ? 'rgba(58,58,58,0.9)' : 'rgba(58,58,58,0.5)';
+    ctx.lineWidth = 1;
+    ctx.stroke();
+  }
+
+  // Spokes
+  for (let i = 0; i < n; i++) {
+    const a = start + i * step;
+    ctx.beginPath();
+    ctx.moveTo(cx, cy);
+    ctx.lineTo(cx + R * Math.cos(a), cy + R * Math.sin(a));
+    ctx.strokeStyle = 'rgba(58,58,58,0.5)';
+    ctx.lineWidth = 1;
+    ctx.stroke();
+  }
+
+  // Fill
+  ctx.beginPath();
+  for (let i = 0; i < n; i++) {
+    const a = start + i * step;
+    const r = R * values[i];
+    i === 0 ? ctx.moveTo(cx + r * Math.cos(a), cy + r * Math.sin(a))
+             : ctx.lineTo(cx + r * Math.cos(a), cy + r * Math.sin(a));
+  }
+  ctx.closePath();
+  ctx.fillStyle = color + '1a';
+  ctx.fill();
+  ctx.strokeStyle = color;
+  ctx.lineWidth = 2;
+  ctx.shadowBlur = 14;
+  ctx.shadowColor = glow;
+  ctx.stroke();
+  ctx.shadowBlur = 0;
+
+  // Dots
+  for (let i = 0; i < n; i++) {
+    const a = start + i * step;
+    const r = R * values[i];
+    ctx.beginPath();
+    ctx.arc(cx + r * Math.cos(a), cy + r * Math.sin(a), 4, 0, Math.PI * 2);
+    ctx.fillStyle = '#ff8c42';
+    ctx.fill();
+  }
+
+  // Labels
+  ctx.font = '11px DM Mono, monospace';
+  ctx.fillStyle = '#7a7a7a';
+  ctx.textAlign = 'center';
+  for (let i = 0; i < n; i++) {
+    const a = start + i * step;
+    const lr = R + 30;
+    ctx.fillText(spiderLabels[i], cx + lr * Math.cos(a), cy + lr * Math.sin(a) + 4);
+  }
+
+  // Ring labels
+  ctx.font = '9px DM Mono';
+  ctx.fillStyle = 'rgba(122,122,122,0.4)';
+  ctx.textAlign = 'left';
+  ['25%','50%','75%','100%'].forEach((l, i) => {
+    ctx.fillText(l, cx + 4, cy - R * (i + 1) / 4 + 3);
+  });
+}
+
+drawSpider('spider2025', [0.75, 0.62, 0.45, 0.52, 0.48, 0.38, 0.5], '#7c6fff', '#7c6fff');
+drawSpider('spider2026', [0.85, 0.78, 0.72, 0.76, 0.73, 0.7, 0.75], '#c8ff00', '#c8ff00');
+
+// REVEAL
+const reveals = document.querySelectorAll('.reveal');
+const obs = new IntersectionObserver(entries => {
+  entries.forEach((e, i) => {
+    if (e.isIntersecting) {
+      setTimeout(() => e.target.classList.add('visible'), i * 80);
+      obs.unobserve(e.target);
+    }
+  });
+}, { threshold: 0.08 });
+reveals.forEach(el => obs.observe(el));
+</script>
+</body>
+</html>
