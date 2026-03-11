@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CORTEX — Company Setup</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --black: #0a0a0a;
+    --white: #f5f2ec;
+    --accent: #c8ff00;
+    --mid: #1e1e1e;
+    --soft: #3a3a3a;
+    --muted: #7a7a7a;
+    --warn: #ff6b35;
+  }
+  html { scroll-behavior: smooth; }
+  body { background: var(--black); color: var(--white); font-family: 'Instrument Sans', sans-serif; line-height: 1.6; overflow-x: hidden; }
+
+  .noise {
+    position: fixed; inset: 0; opacity: 0.03;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    background-size: 200px; pointer-events: none; z-index: 100;
+  }
+
+  /* HERO */
+  .hero {
+    min-height: 100vh; display: grid; place-items: center;
+    padding: 4rem 2rem; position: relative; overflow: hidden;
+  }
+  .hero::before {
+    content: ''; position: absolute; inset: 0;
+    background: radial-gradient(ellipse 80% 60% at 50% 50%, #1a2a00 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .hero-inner { max-width: 900px; text-align: center; position: relative; z-index: 1; }
+  .label { font-family: 'DM Mono', monospace; font-size: 0.7rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--accent); margin-bottom: 2.5rem; opacity: 0; animation: fadeUp 0.8s 0.2s forwards; }
+  .hero-headline { font-family: 'DM Serif Display', serif; font-size: clamp(2.8rem, 7vw, 5.5rem); line-height: 1.08; letter-spacing: -0.02em; margin-bottom: 2rem; opacity: 0; animation: fadeUp 0.9s 0.4s forwards; }
+  .hero-headline em { font-style: italic; color: var(--accent); }
+  .hero-sub { font-size: 1rem; color: var(--muted); max-width: 520px; margin: 0 auto; opacity: 0; animation: fadeUp 0.9s 0.6s forwards; }
+  .scroll-hint { position: absolute; bottom: 2.5rem; left: 50%; transform: translateX(-50%); display: flex; flex-direction: column; align-items: center; gap: 0.5rem; font-family: 'DM Mono', monospace; font-size: 0.65rem; letter-spacing: 0.15em; color: var(--soft); text-transform: uppercase; opacity: 0; animation: fadeUp 1s 1.2s forwards; }
+  .scroll-line { width: 1px; height: 40px; background: linear-gradient(to bottom, var(--accent), transparent); animation: scrollPulse 2s 1.5s infinite; }
+
+  /* LAYOUT */
+  section { padding: 6rem 2rem; max-width: 1100px; margin: 0 auto; }
+  .section-label { font-family: 'DM Mono', monospace; font-size: 0.65rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--accent); margin-bottom: 2rem; display: flex; align-items: center; gap: 1rem; }
+  .section-label::after { content: ''; flex: 1; height: 1px; background: var(--soft); max-width: 80px; }
+
+  /* TEAM GRID */
+  .team-section { border-top: 1px solid var(--soft); }
+  .team-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2px; margin-top: 2rem; }
+  .team-card { background: var(--mid); padding: 2rem; position: relative; overflow: hidden; }
+  .team-card.critical { background: rgba(200,255,0,0.06); border: 1px solid rgba(200,255,0,0.25); }
+  .team-card.borrowed { background: rgba(255,255,255,0.02); border: 1px solid var(--soft); opacity: 0.7; }
+  .team-card-bar { position: absolute; top: 0; left: 0; width: 100%; height: 2px; }
+  .bar-full { background: var(--accent); }
+  .bar-half { background: linear-gradient(to right, var(--accent) 50%, transparent 50%); background-size: 100%; }
+  .bar-open { background: var(--warn); }
+  .bar-borrowed { background: var(--soft); }
+
+  .role-tag { font-family: 'DM Mono', monospace; font-size: 0.6rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--muted); margin-bottom: 0.75rem; display: block; }
+  .team-card.critical .role-tag { color: var(--accent); }
+  .team-card h3 { font-family: 'DM Serif Display', serif; font-size: 1.3rem; line-height: 1.2; margin-bottom: 0.5rem; letter-spacing: -0.01em; }
+  .team-card .person { font-size: 0.85rem; color: var(--accent); font-weight: 600; margin-bottom: 1rem; }
+  .team-card.critical .person { color: var(--warn); }
+  .team-card .desc { font-size: 0.85rem; color: var(--muted); line-height: 1.6; }
+  .agent-bar { margin-top: 1.25rem; }
+  .agent-label { font-family: 'DM Mono', monospace; font-size: 0.6rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--soft); margin-bottom: 0.4rem; display: flex; justify-content: space-between; }
+  .agent-track { height: 3px; background: var(--soft); border-radius: 2px; }
+  .agent-fill { height: 100%; border-radius: 2px; background: var(--accent); }
+
+  /* BEREICHE */
+  .bereiche-section { border-top: 1px solid var(--soft); }
+  .bereich-list { margin-top: 2rem; display: flex; flex-direction: column; gap: 2px; }
+  .bereich-row { display: grid; grid-template-columns: 2fr 1fr 1fr 2fr; gap: 2px; }
+  .bereich-header { display: grid; grid-template-columns: 2fr 1fr 1fr 2fr; gap: 2px; margin-bottom: 2px; }
+  .bh-cell { font-family: 'DM Mono', monospace; font-size: 0.6rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--soft); padding: 0.5rem 1rem; }
+  .b-cell { background: var(--mid); padding: 1rem 1.25rem; font-size: 0.88rem; display: flex; align-items: center; }
+  .b-cell.name { font-weight: 600; }
+  .b-cell.owner-hannes { color: var(--accent); font-family: 'DM Mono', monospace; font-size: 0.8rem; }
+  .b-cell.owner-lorenz { color: #88d4ff; font-family: 'DM Mono', monospace; font-size: 0.8rem; }
+  .b-cell.owner-open { color: var(--warn); font-family: 'DM Mono', monospace; font-size: 0.8rem; }
+  .b-cell.owner-diamir { color: var(--soft); font-family: 'DM Mono', monospace; font-size: 0.8rem; }
+  .agent-dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; margin-right: 0.5rem; flex-shrink: 0; }
+  .dot-high { background: var(--accent); box-shadow: 0 0 8px var(--accent); }
+  .dot-mid { background: #88d4ff; }
+  .dot-low { background: var(--soft); }
+
+  /* HANNES PROFIL */
+  .profil-section { border-top: 1px solid var(--soft); }
+  .profil-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2px; margin-top: 2rem; }
+  .profil-card { background: var(--mid); padding: 2rem; }
+  .profil-card h3 { font-family: 'DM Serif Display', serif; font-size: 1.2rem; margin-bottom: 1rem; letter-spacing: -0.01em; }
+  .skill-list { list-style: none; display: flex; flex-direction: column; gap: 0.5rem; }
+  .skill-list li { font-size: 0.88rem; color: var(--muted); display: flex; align-items: center; gap: 0.75rem; line-height: 1.5; }
+  .skill-list li::before { content: ''; width: 4px; height: 4px; border-radius: 50%; background: var(--accent); flex-shrink: 0; }
+
+  /* SPLIT */
+  .split-section { border-top: 1px solid var(--soft); display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: start; }
+  .split-text h2 { font-family: 'DM Serif Display', serif; font-size: clamp(1.6rem, 3vw, 2.5rem); line-height: 1.2; letter-spacing: -0.02em; margin-bottom: 1.5rem; }
+  .split-text p { color: var(--muted); font-size: 0.95rem; line-height: 1.8; margin-bottom: 1rem; }
+  .requirement-list { margin-top: 2rem; display: flex; flex-direction: column; gap: 2px; }
+  .req-item { background: var(--mid); padding: 1.25rem 1.5rem; font-size: 0.88rem; color: var(--muted); line-height: 1.6; border-left: 2px solid var(--warn); }
+  .req-item strong { color: var(--white); display: block; margin-bottom: 0.25rem; font-size: 0.85rem; }
+
+  /* NEXT STEPS */
+  .steps-section { border-top: 1px solid var(--soft); }
+  .steps-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 2px; margin-top: 2rem; }
+  .step-card { background: var(--mid); padding: 1.75rem 1.5rem; position: relative; }
+  .step-num { font-family: 'DM Mono', monospace; font-size: 2rem; color: rgba(200,255,0,0.15); line-height: 1; margin-bottom: 1rem; font-weight: 500; }
+  .step-card h4 { font-size: 0.9rem; font-weight: 600; margin-bottom: 0.5rem; line-height: 1.3; }
+  .step-card p { font-size: 0.8rem; color: var(--muted); line-height: 1.6; }
+  .step-owner { font-family: 'DM Mono', monospace; font-size: 0.6rem; letter-spacing: 0.1em; text-transform: uppercase; margin-top: 1rem; }
+  .step-owner.h { color: var(--accent); }
+  .step-owner.l { color: #88d4ff; }
+  .step-owner.b { color: var(--soft); }
+
+  /* FOOTER */
+  footer { border-top: 1px solid var(--soft); padding: 2rem; max-width: 1100px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; }
+  footer span { font-family: 'DM Mono', monospace; font-size: 0.65rem; letter-spacing: 0.15em; color: var(--soft); text-transform: uppercase; }
+
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: translateY(0); } }
+  @keyframes scrollPulse { 0%, 100% { opacity: 0.3; } 50% { opacity: 1; } }
+  .reveal { opacity: 0; transform: translateY(30px); transition: opacity 0.8s ease, transform 0.8s ease; }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
+
+  @media (max-width: 900px) {
+    .team-grid, .profil-grid, .steps-grid { grid-template-columns: 1fr; }
+    .bereich-row, .bereich-header { grid-template-columns: 1fr 1fr; }
+    .b-cell.notes { display: none; }
+    .bh-cell:last-child { display: none; }
+    .split-section { grid-template-columns: 1fr; gap: 3rem; }
+  }
+</style>
+</head>
+<body>
+<div class="noise"></div>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-inner">
+    <p class="label">CORTEX — Company Setup v0.1</p>
+    <h1 class="hero-headline">Wer macht was —<br>und <em>wie</em> arbeiten wir.</h1>
+    <p class="hero-sub">Ein schlankes, agentisch getriebenes Setup für eine Firma die Outcomes liefert statt Stunden verkauft.</p>
+  </div>
+  <div class="scroll-hint"><div class="scroll-line"></div><span>Scroll</span></div>
+</div>
+
+<!-- TEAM -->
+<section class="team-section reveal">
+  <div class="section-label">01 — Team Jahr 1</div>
+  <div class="team-grid">
+
+    <div class="team-card">
+      <div class="team-card-bar bar-full"></div>
+      <span class="role-tag">CEO / Sales</span>
+      <h3>Business Development</h3>
+      <div class="person">Lorenz — Vollzeit</div>
+      <p class="desc">C-Level Netzwerk, Deals öffnen, DACH und darüber hinaus. Der emotionale Verkäufer der Türen aufmacht die andere nicht finden.</p>
+      <div class="agent-bar">
+        <div class="agent-label"><span>Agenten-Anteil</span><span>20%</span></div>
+        <div class="agent-track"><div class="agent-fill" style="width:20%"></div></div>
+      </div>
+    </div>
+
+    <div class="team-card">
+      <div class="team-card-bar bar-full"></div>
+      <span class="role-tag">CTO / Technik</span>
+      <h3>Technische Führung</h3>
+      <div class="person">Hannes — Vollzeit</div>
+      <p class="desc">Architektur, AI-Engineering, DevOps, Projektmanagement. Das technische Rückgrat der Firma — von Konzept bis Deployment.</p>
+      <div class="agent-bar">
+        <div class="agent-label"><span>Agenten-Anteil</span><span>70%</span></div>
+        <div class="agent-track"><div class="agent-fill" style="width:70%"></div></div>
+      </div>
+    </div>
+
+    <div class="team-card critical">
+      <div class="team-card-bar bar-open"></div>
+      <span class="role-tag">⚠ Kritische Lücke</span>
+      <h3>Representative</h3>
+      <div class="person">Offen — Suche läuft</div>
+      <p class="desc">Sitzt beim Kunden auf Fachbereichs-Ebene. Übersetzt Business-Schmerz in technischen Scope. Ohne diese Rolle ist Hannes der Bottleneck.</p>
+      <div class="agent-bar">
+        <div class="agent-label"><span>Agenten-Anteil</span><span>30%</span></div>
+        <div class="agent-track"><div class="agent-fill" style="width:30%"></div></div>
+      </div>
+    </div>
+
+    <div class="team-card">
+      <div class="team-card-bar bar-open"></div>
+      <span class="role-tag">Ab Projekt 2+</span>
+      <h3>AI Engineer</h3>
+      <div class="person">Offen — intern oder extern</div>
+      <p class="desc">Kein klassischer Developer. Jemand der sich Claude Code, Codex und n8n "hingibt" — Code lesen, nicht jede Zeile selbst schreiben.</p>
+      <div class="agent-bar">
+        <div class="agent-label"><span>Agenten-Anteil</span><span>85%</span></div>
+        <div class="agent-track"><div class="agent-fill" style="width:85%"></div></div>
+      </div>
+    </div>
+
+    <div class="team-card">
+      <div class="team-card-bar bar-half"></div>
+      <span class="role-tag">Teilzeit / Extern</span>
+      <h3>Sales-Assistenz</h3>
+      <div class="person">Offen — Teilzeit</div>
+      <p class="desc">Terminkoordination, Admin, CRM-Pflege für Lorenz. Entlastet vom operativen Kleinkram.</p>
+      <div class="agent-bar">
+        <div class="agent-label"><span>Agenten-Anteil</span><span>50%</span></div>
+        <div class="agent-track"><div class="agent-fill" style="width:50%"></div></div>
+      </div>
+    </div>
+
+    <div class="team-card borrowed">
+      <div class="team-card-bar bar-borrowed"></div>
+      <span class="role-tag">Von Diamir — Jahr 1</span>
+      <h3>Finance, HR, UI/UX</h3>
+      <div class="person">Diamir — ausgeliehen</div>
+      <p class="desc">Buchhaltung, Rechnungslegung, Recruiting bei Bedarf, UI/UX projektbasiert über Darwin's Lab / Web & Söhne.</p>
+      <div class="agent-bar">
+        <div class="agent-label"><span>Agenten-Anteil</span><span>—</span></div>
+        <div class="agent-track"><div class="agent-fill" style="width:0%"></div></div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- BEREICHE -->
+<section class="bereiche-section reveal">
+  <div class="section-label">02 — Bereiche & Verantwortung</div>
+  <div class="bereich-list">
+    <div class="bereich-header">
+      <div class="bh-cell">Bereich</div>
+      <div class="bh-cell">Owner</div>
+      <div class="bh-cell">Agenten-Anteil</div>
+      <div class="bh-cell">Notiz</div>
+    </div>
+    <div class="bereich-row">
+      <div class="b-cell name">Sales & Business Development</div>
+      <div class="b-cell owner-lorenz">Lorenz</div>
+      <div class="b-cell"><span class="agent-dot dot-low"></span>Gering</div>
+      <div class="b-cell" style="color:var(--muted);font-size:0.82rem">C-Level Netzwerk, persönliche Beziehungen</div>
+    </div>
+    <div class="bereich-row">
+      <div class="b-cell name">Engagement & Projekt-Anbahnung</div>
+      <div class="b-cell owner-open">⚠ Offen</div>
+      <div class="b-cell"><span class="agent-dot dot-mid"></span>Mittel</div>
+      <div class="b-cell" style="color:var(--muted);font-size:0.82rem">Kritischste offene Stelle</div>
+    </div>
+    <div class="bereich-row">
+      <div class="b-cell name">Software Architektur & Konzeption</div>
+      <div class="b-cell owner-hannes">Hannes</div>
+      <div class="b-cell"><span class="agent-dot dot-mid"></span>Mittel</div>
+      <div class="b-cell" style="color:var(--muted);font-size:0.82rem">UI/UX von Diamir eingekauft</div>
+    </div>
+    <div class="bereich-row">
+      <div class="b-cell name">Umsetzung & AI-Engineering</div>
+      <div class="b-cell owner-hannes">Hannes</div>
+      <div class="b-cell"><span class="agent-dot dot-high"></span>Sehr hoch</div>
+      <div class="b-cell" style="color:var(--muted);font-size:0.82rem">+ AI Engineer ab Projekt 2</div>
+    </div>
+    <div class="bereich-row">
+      <div class="b-cell name">Projektmanagement & Kommunikation</div>
+      <div class="b-cell owner-hannes">Hannes</div>
+      <div class="b-cell"><span class="agent-dot dot-high"></span>Hoch</div>
+      <div class="b-cell" style="color:var(--muted);font-size:0.82rem">Schrittweise agentisch automatisieren</div>
+    </div>
+    <div class="bereich-row">
+      <div class="b-cell name">DevOps & Infrastruktur</div>
+      <div class="b-cell owner-hannes">Hannes</div>
+      <div class="b-cell"><span class="agent-dot dot-high"></span>Hoch</div>
+      <div class="b-cell" style="color:var(--muted);font-size:0.82rem">EU-Hosting, DSGVO, Ansible/AWS/Azure</div>
+    </div>
+    <div class="bereich-row">
+      <div class="b-cell name">Finance & Administration</div>
+      <div class="b-cell owner-diamir">Diamir</div>
+      <div class="b-cell"><span class="agent-dot dot-low"></span>—</div>
+      <div class="b-cell" style="color:var(--muted);font-size:0.82rem">Ausgeliehen bis Selbsttragfähigkeit</div>
+    </div>
+    <div class="bereich-row">
+      <div class="b-cell name">HR & Hiring</div>
+      <div class="b-cell owner-diamir">Diamir</div>
+      <div class="b-cell"><span class="agent-dot dot-low"></span>—</div>
+      <div class="b-cell" style="color:var(--muted);font-size:0.82rem">Bei Bedarf</div>
+    </div>
+  </div>
+</section>
+
+<!-- HANNES PROFIL -->
+<section class="profil-section reveal">
+  <div class="section-label">03 — Was Hannes einbringt</div>
+  <div class="profil-grid">
+    <div class="profil-card">
+      <h3>Was Hannes in der CORTEX macht</h3>
+      <ul class="skill-list">
+        <li>Technische Konzeption & Software Architektur nach der Anbahnung</li>
+        <li>Agent-driven Umsetzung — Architekt und Qualitätskontrolle, nicht jede Zeile selbst</li>
+        <li>Projektmanagement: Ressourcen, Budget, laufende Kundenkommunikation</li>
+        <li>DevOps & EU-konforme Infrastruktur — DSGVO-Deployments als Verkaufsargument</li>
+        <li>Aufbau und Konfiguration von OpenClaw-Instanzen und n8n-Automationen</li>
+      </ul>
+    </div>
+    <div class="profil-card">
+      <h3>Technische Kompetenzen</h3>
+      <ul class="skill-list">
+        <li>Software Architektur & Systemdesign</li>
+        <li>Agent-driven Development (Claude Code, Codex, OpenClaw)</li>
+        <li>Backend- und Frontend-Entwicklung (dezent, aber solide)</li>
+        <li>n8n Workflow-Automatisierung</li>
+        <li>Docker, Ansible, GitLab CI/CD, nginx</li>
+        <li>AWS, Azure, EU-konforme Deployments</li>
+        <li>DSGVO-konforme Infrastruktur</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- REPRESENTATIVE -->
+<section class="split-section reveal">
+  <div class="split-text">
+    <div class="section-label">04 — Die kritische Lücke</div>
+    <h2>Der Representative — die wichtigste Einstellung.</h2>
+    <p>Lorenz öffnet die Tür. Hannes baut die Lösung. Aber wer sitzt dazwischen — beim Fachbereich, beim Kunden, beim wöchentlichen Status?</p>
+    <p>Ohne diese Person ist Hannes in jedem Kundengespräch, jedem Scope-Workshop, jedem Projektupdate. Das ist kein CTO-Job. Das ist eine eigene Rolle.</p>
+    <p>Kandidaten: intern aus der Diamir oder extern. Suche startet parallel zur Gründung.</p>
+  </div>
+  <div class="requirement-list">
+    <div class="req-item"><strong>Technisches Grundverständnis</strong>Versteht was ein Agent ist, was eine API macht, was n8n tut — muss es nicht bauen können.</div>
+    <div class="req-item"><strong>Fachbereichs-Ebene</strong>Kommt gut an bei Abteilungsleitern und Projektverantwortlichen, nicht nur C-Level.</div>
+    <div class="req-item"><strong>Scope-Fähigkeit</strong>Kann aus einem offenen Gespräch einen klaren, umsetzbaren Projektscope ableiten.</div>
+    <div class="req-item"><strong>Präsenz-Bereitschaft</strong>Fährt zum Kunden. Wien, Graz, Linz, Zürich. DACH bedeutet Reisen.</div>
+    <div class="req-item"><strong>Consulting-Background</strong>Erfahrung in Projektdefinition oder Beratung von Vorteil — kein Muss.</div>
+  </div>
+</section>
+
+<!-- NEXT STEPS -->
+<section class="steps-section reveal">
+  <div class="section-label">05 — Nächste Schritte</div>
+  <div class="steps-grid">
+    <div class="step-card">
+      <div class="step-num">01</div>
+      <h4>Lorenz liest & gibt Feedback</h4>
+      <p>Setup Paper und Manifesto als Grundlage für das gemeinsame Bild.</p>
+      <div class="step-owner l">→ Lorenz</div>
+    </div>
+    <div class="step-card">
+      <div class="step-num">02</div>
+      <h4>Representative-Profil finalisieren</h4>
+      <p>Anforderungen einigen, aktive Suche starten — intern und extern.</p>
+      <div class="step-owner b">→ Beide</div>
+    </div>
+    <div class="step-card">
+      <div class="step-num">03</div>
+      <h4>Businessplan mit Zahlen</h4>
+      <p>Hannes erstellt Kosten/Einnahmen-Plan Jahr 1 & 2 als Grundlage für Maxi.</p>
+      <div class="step-owner h">→ Hannes</div>
+    </div>
+    <div class="step-card">
+      <div class="step-num">04</div>
+      <h4>Anwalt & GmbH-Struktur</h4>
+      <p>Lorenz spricht mit Anwalt bzgl. Holding, Gründung, Gesellschaftsvertrag.</p>
+      <div class="step-owner l">→ Lorenz</div>
+    </div>
+    <div class="step-card">
+      <div class="step-num">05</div>
+      <h4>Gespräch mit Maxi</h4>
+      <p>Manifesto + Setup Paper + Businessplan als Grundlage. Gemeinsam präsentieren.</p>
+      <div class="step-owner b">→ Beide</div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <span>CORTEX — Company Setup</span>
+  <span>v0.1 — intern</span>
+</footer>
+
+<script>
+  const reveals = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach((entry, i) => {
+      if (entry.isIntersecting) {
+        setTimeout(() => entry.target.classList.add('visible'), i * 80);
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.08 });
+  reveals.forEach(el => observer.observe(el));
+</script>
+</body>
+</html>
