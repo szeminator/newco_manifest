@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CORTEX — Team & Struktur</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --black: #080808; --white: #f0ede6; --accent: #c8ff00;
+  --mid: #181818; --soft: #2a2a2a; --muted: #5a5a5a;
+  --orange: #ff8c42; --blue: #7ec8e3; --diamir: #333;
+}
+html, body { width: 100%; min-height: 100vh; }
+body {
+  background: var(--black); color: var(--white);
+  font-family: 'Instrument Sans', sans-serif;
+  display: flex; flex-direction: column; align-items: center;
+  padding: 3rem 1.5rem 5rem; overflow-x: hidden;
+}
+.noise { position: fixed; inset: 0; opacity: 0.025; pointer-events: none; z-index: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"); }
+
+header { text-align: center; margin-bottom: 0.75rem; position: relative; z-index: 1; }
+header h1 { font-family: 'DM Serif Display', serif; font-size: clamp(1.8rem,5vw,3rem); letter-spacing: -0.03em; }
+header h1 em { font-style: italic; color: var(--accent); }
+header p { font-family: 'DM Mono', monospace; font-size: 0.6rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted); margin-top: 0.5rem; }
+.hint { font-family: 'DM Mono', monospace; font-size: 0.6rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); margin-bottom: 2.5rem; position: relative; z-index: 1; animation: pulse 3s infinite; }
+@keyframes pulse { 0%,100%{opacity:.5} 50%{opacity:1} }
+
+/* canvas layer */
+#cwrap { position: relative; z-index: 1; width: 100%; max-width: 1100px; }
+#cc { position: absolute; inset: 0; pointer-events: none; z-index: 0; }
+
+/* org layout */
+.org { position: relative; z-index: 2; display: flex; flex-direction: column; align-items: center; gap: 0; width: 100%; }
+.row { display: flex; justify-content: center; gap: 24px; width: 100%; }
+.sp  { height: 90px; } .sp-sm { height: 44px; }
+
+.div-label { font-family: 'DM Mono', monospace; font-size: 0.58rem; letter-spacing: 0.2em;
+  text-transform: uppercase; color: var(--soft); display: flex; align-items: center;
+  gap: 1rem; width: 100%; max-width: 560px; margin: 0 auto; }
+.div-label::before, .div-label::after { content:''; flex:1; height:1px; background:var(--soft); }
+
+/* cards */
+.card { background: var(--mid); border-radius: 2px; padding: 1.1rem 1.2rem 0.9rem;
+  position: relative; overflow: visible; cursor: pointer; user-select: none; flex-shrink: 0;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, opacity 0.2s ease; }
+.card::before { content:''; position:absolute; top:0; left:0; right:0; height:2px; }
+.w-lg{width:215px} .w-md{width:190px} .w-sm{width:170px}
+
+.c-hannes::before { background:var(--accent); box-shadow:0 0 12px var(--accent); }
+.c-lorenz::before { background:var(--blue); }
+.c-open::before   { background:var(--orange); }
+.c-diamir::before { background:var(--diamir); }
+
+.card.dimmed { opacity:.15; transform:scale(.97); }
+.card.active { transform:translateY(-5px); }
+.c-hannes.active { box-shadow:0 16px 40px rgba(200,255,0,.18); }
+.c-lorenz.active { box-shadow:0 16px 40px rgba(126,200,227,.14); }
+.c-open.active   { box-shadow:0 16px 40px rgba(255,140,66,.14); }
+
+.card-role { font-family:'DM Mono',monospace; font-size:.56rem; letter-spacing:.18em;
+  text-transform:uppercase; margin-bottom:.35rem; }
+.c-hannes .card-role{color:var(--accent)} .c-lorenz .card-role{color:var(--blue)}
+.c-open   .card-role{color:var(--orange)} .c-diamir .card-role{color:var(--muted)}
+
+.card-name { font-family:'DM Serif Display',serif; font-size:1rem; line-height:1.2;
+  letter-spacing:-0.01em; margin-bottom:.3rem; }
+.c-open .card-name { color:var(--muted); font-style:italic; }
+
+.card-desc { font-size:.74rem; color:var(--muted); line-height:1.45; margin-bottom:.6rem; }
+
+.ab-top { font-family:'DM Mono',monospace; font-size:.52rem; letter-spacing:.08em;
+  text-transform:uppercase; color:var(--soft); display:flex; justify-content:space-between; margin-bottom:3px; }
+.ab-track { height:2px; background:var(--soft); border-radius:1px; margin-bottom:.5rem; }
+.ab-fill  { height:100%; border-radius:1px; }
+.c-hannes .ab-fill{background:var(--accent)} .c-lorenz .ab-fill{background:var(--blue)}
+.c-open   .ab-fill{background:var(--orange)} .c-diamir .ab-fill{background:var(--soft)}
+
+.badge { display:inline-block; font-family:'DM Mono',monospace; font-size:.5rem;
+  letter-spacing:.1em; text-transform:uppercase; padding:2px 6px; border-radius:1px; }
+.b-g{background:rgba(200,255,0,.1);color:var(--accent)}
+.b-o{background:rgba(255,140,66,.12);color:var(--orange)}
+.b-d{background:rgba(58,58,58,.5);color:var(--muted)}
+
+/* tooltip bubble */
+.tip { position:absolute; bottom:calc(100% + 8px); left:50%; transform:translateX(-50%);
+  background:#111; border:1px solid var(--soft); padding:.55rem .8rem;
+  white-space:nowrap; font-size:.72rem; color:var(--muted); line-height:1.5;
+  pointer-events:none; opacity:0; transition:opacity .15s; z-index:20;
+  border-radius:2px; font-family:'Instrument Sans',sans-serif; }
+.card.active .tip { opacity:1; }
+.tip strong { color:var(--white); display:block; font-size:.68rem; margin-bottom:.15rem; }
+
+/* legend */
+.legend { display:flex; gap:1.5rem; flex-wrap:wrap; justify-content:center;
+  margin-top:3rem; position:relative; z-index:1; }
+.leg { display:flex; align-items:center; gap:.5rem; font-family:'DM Mono',monospace;
+  font-size:.58rem; letter-spacing:.1em; text-transform:uppercase; color:var(--muted); }
+.ld { width:8px; height:8px; border-radius:50%; flex-shrink:0; }
+</style>
+</head>
+<body>
+<div class="noise"></div>
+
+<header>
+  <h1>CORTEX — <em>Team & Struktur</em></h1>
+  <p>Company Setup Jahr 1</p>
+</header>
+<p class="hint">↑ Hover auf eine Karte um Verbindungen zu sehen</p>
+
+<div id="cwrap">
+  <canvas id="cc"></canvas>
+  <div class="org">
+
+    <!-- ROW 1 -->
+    <div class="row" id="r1">
+      <div class="card w-lg c-lorenz" id="lorenz"
+           data-c='["rep","assistenz","finance","hr"]'>
+        <div class="tip"><strong>Lorenz arbeitet mit:</strong>Representative · Assistenz · Finance · HR</div>
+        <div class="card-role">CEO / Sales</div>
+        <div class="card-name">Lorenz</div>
+        <div class="card-desc">Business Development<br>C-Level Netzwerk DACH</div>
+        <div class="ab-top"><span>Agenten-Anteil</span><span>20%</span></div>
+        <div class="ab-track"><div class="ab-fill" style="width:20%"></div></div>
+        <span class="badge b-g">Ab M1 — Vollzeit</span>
+      </div>
+
+      <div class="card w-lg c-hannes" id="hannes"
+           data-c='["rep","aiengineer","uiux","finance"]'>
+        <div class="tip"><strong>Hannes arbeitet mit:</strong>Representative · AI Eng · UI/UX · Finance</div>
+        <div class="card-role">CTO / Technik</div>
+        <div class="card-name">Hannes</div>
+        <div class="card-desc">Architektur · Engineering<br>DevOps · Projektmanagement</div>
+        <div class="ab-top"><span>Agenten-Anteil</span><span>70%</span></div>
+        <div class="ab-track"><div class="ab-fill" style="width:70%"></div></div>
+        <span class="badge b-g">Ab M1 — Vollzeit</span>
+      </div>
+    </div>
+
+    <div class="sp"></div>
+
+    <!-- ROW 2 -->
+    <div class="row" id="r2">
+      <div class="card w-md c-open" id="rep"
+           data-c='["lorenz","hannes","uiux"]'>
+        <div class="tip"><strong>Schnittstelle zu:</strong>Lorenz · Hannes · UI/UX</div>
+        <div class="card-role">⚠ Representative</div>
+        <div class="card-name">Offen</div>
+        <div class="card-desc">Engagement & Scope<br>Fachbereich beim Kunden</div>
+        <div class="ab-top"><span>Agenten-Anteil</span><span>30%</span></div>
+        <div class="ab-track"><div class="ab-fill" style="width:30%"></div></div>
+        <span class="badge b-o">Ab M3 — gesucht</span>
+      </div>
+
+      <div class="card w-md c-open" id="aiengineer"
+           data-c='["hannes","uiux"]'>
+        <div class="tip"><strong>Arbeitet mit:</strong>Hannes · UI/UX Diamir</div>
+        <div class="card-role">⚠ AI Engineer</div>
+        <div class="card-name">Offen</div>
+        <div class="card-desc">Agent-driven Dev<br>n8n · OpenClaw · Claude Code</div>
+        <div class="ab-top"><span>Agenten-Anteil</span><span>85%</span></div>
+        <div class="ab-track"><div class="ab-fill" style="width:85%"></div></div>
+        <span class="badge b-o">Ab M6 — intern/extern</span>
+      </div>
+
+      <div class="card w-md c-open" id="assistenz"
+           data-c='["lorenz","finance"]'>
+        <div class="tip"><strong>Unterstützt:</strong>Lorenz · Finance/Admin</div>
+        <div class="card-role">Sales-Assistenz</div>
+        <div class="card-name">Offen</div>
+        <div class="card-desc">Terminkoord. · CRM<br>Admin für Lorenz</div>
+        <div class="ab-top"><span>Agenten-Anteil</span><span>50%</span></div>
+        <div class="ab-track"><div class="ab-fill" style="width:50%"></div></div>
+        <span class="badge b-o">Ab M2 — Teilzeit</span>
+      </div>
+    </div>
+
+    <div class="sp-sm"></div>
+    <div class="div-label">Von Diamir ausgeliehen</div>
+    <div class="sp-sm"></div>
+
+    <!-- ROW 3 -->
+    <div class="row" id="r3">
+      <div class="card w-sm c-diamir" id="finance"
+           data-c='["lorenz","hannes","assistenz"]'>
+        <div class="tip"><strong>Zulieferer für:</strong>Lorenz · Hannes · Assistenz</div>
+        <div class="card-role">Finance & Admin</div>
+        <div class="card-name">Diamir</div>
+        <div class="card-desc">Buchhaltung<br>Rechnungslegung</div>
+        <span class="badge b-d">Ausgeliehen</span>
+      </div>
+
+      <div class="card w-sm c-diamir" id="uiux"
+           data-c='["hannes","rep","aiengineer"]'>
+        <div class="tip"><strong>Zulieferer für:</strong>Hannes · Rep · AI Eng</div>
+        <div class="card-role">UI/UX Design</div>
+        <div class="card-name">Diamir intern</div>
+        <div class="card-desc">Screendesign · Prototypen<br>Projektbasiert</div>
+        <span class="badge b-d">Bei Bedarf</span>
+      </div>
+
+      <div class="card w-sm c-diamir" id="hr"
+           data-c='["lorenz"]'>
+        <div class="tip"><strong>Koordiniert über:</strong>Lorenz</div>
+        <div class="card-role">HR & Hiring</div>
+        <div class="card-name">Diamir</div>
+        <div class="card-desc">Recruiting<br>Bei Bedarf</div>
+        <span class="badge b-d">Bei Bedarf</span>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div class="legend">
+  <div class="leg"><div class="ld" style="background:var(--accent);box-shadow:0 0 6px var(--accent)"></div>Hannes</div>
+  <div class="leg"><div class="ld" style="background:var(--blue)"></div>Lorenz</div>
+  <div class="leg"><div class="ld" style="background:var(--orange)"></div>Offen / gesucht</div>
+  <div class="leg"><div class="ld" style="background:var(--diamir);border:1px solid #555"></div>Diamir ausgeliehen</div>
+</div>
+
+<script>
+const wrap  = document.getElementById('cwrap');
+const canvas= document.getElementById('cc');
+const ctx   = canvas.getContext('2d');
+const cards = Array.from(document.querySelectorAll('.card'));
+
+const COLORS = {
+  lorenz:'#7ec8e3', hannes:'#c8ff00',
+  rep:'#ff8c42', aiengineer:'#ff8c42', assistenz:'#ff8c42',
+  finance:'#555', uiux:'#555', hr:'#555'
+};
+
+function resize() {
+  const r = wrap.getBoundingClientRect();
+  canvas.width  = r.width;
+  canvas.height = r.height;
+}
+
+function center(id) {
+  const el = document.getElementById(id);
+  const er = el.getBoundingClientRect();
+  const wr = wrap.getBoundingClientRect();
+  return { x: er.left - wr.left + er.width/2, y: er.top - wr.top + er.height/2 };
+}
+
+function drawLine(fromId, toId, color) {
+  const f = center(fromId), t = center(toId);
+  const dy = t.y - f.y, dx = t.x - f.x;
+  // control points: bend outward slightly
+  const cx1 = f.x + dx*0.1, cy1 = f.y + dy*0.55;
+  const cx2 = t.x - dx*0.1, cy2 = t.y - dy*0.55;
+
+  ctx.beginPath();
+  ctx.moveTo(f.x, f.y);
+  ctx.bezierCurveTo(cx1,cy1, cx2,cy2, t.x, t.y);
+  ctx.strokeStyle = color;
+  ctx.lineWidth = 1.5;
+  ctx.globalAlpha = 0.65;
+  ctx.setLineDash([5,4]);
+  ctx.stroke();
+  ctx.setLineDash([]);
+
+  // endpoint dot
+  ctx.beginPath();
+  ctx.arc(t.x, t.y, 3.5, 0, Math.PI*2);
+  ctx.fillStyle = color;
+  ctx.globalAlpha = 0.9;
+  ctx.fill();
+  ctx.globalAlpha = 1;
+}
+
+const BG_PAIRS = [
+  ['lorenz','rep'],['hannes','rep'],['hannes','aiengineer'],
+  ['lorenz','assistenz'],['hannes','uiux'],['lorenz','finance'],
+  ['hannes','finance'],['rep','uiux'],['aiengineer','uiux'],
+  ['lorenz','hr'],['assistenz','finance'],
+];
+
+function drawBgLines() {
+  BG_PAIRS.forEach(([a,b]) => {
+    const f = center(a), t = center(b);
+    const dx = t.x - f.x, dy = t.y - f.y;
+    const cx1 = f.x + dx*0.1, cy1 = f.y + dy*0.55;
+    const cx2 = t.x - dx*0.1, cy2 = t.y - dy*0.55;
+    ctx.beginPath();
+    ctx.moveTo(f.x, f.y);
+    ctx.bezierCurveTo(cx1,cy1, cx2,cy2, t.x, t.y);
+    ctx.strokeStyle = '#ffffff';
+    ctx.lineWidth = 1;
+    ctx.globalAlpha = 0.12;
+    ctx.setLineDash([4,6]);
+    ctx.stroke();
+    ctx.setLineDash([]);
+    ctx.globalAlpha = 1;
+  });
+}
+
+function activate(id) {
+  if (active === id) { deactivate(); return; }
+  active = id;
+  const el = document.getElementById(id);
+  const connects = JSON.parse(el.dataset.c || '[]');
+  const set = new Set(connects);
+
+  cards.forEach(c => {
+    if (c.id === id) { c.classList.add('active'); c.classList.remove('dimmed'); }
+    else if (set.has(c.id)) { c.classList.remove('dimmed','active'); }
+    else { c.classList.add('dimmed'); c.classList.remove('active'); }
+  });
+
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  drawBgLines();
+  const col = COLORS[id] || '#888';
+  connects.forEach(tid => drawLine(id, tid, col));
+}
+
+function deactivate() {
+  active = null;
+  cards.forEach(c => c.classList.remove('active','dimmed'));
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  drawBgLines();
+}
+
+cards.forEach(c => {
+  c.addEventListener('mouseenter', () => activate(c.id));
+  c.addEventListener('click', () => activate(c.id));
+  c.addEventListener('mouseleave', () => {
+    // small delay so moving between cards doesn't flicker
+    setTimeout(() => {
+      const hov = document.querySelector('.card:hover');
+      if (!hov) deactivate();
+    }, 60);
+  });
+});
+
+window.addEventListener('resize', () => { resize(); if (active) activate(active); else drawBgLines(); });
+resize();
+setTimeout(drawBgLines, 200);
+</script>
+</body>
+</html>
