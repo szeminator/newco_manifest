@@ -83,12 +83,18 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);line-height:
 .toast{position:fixed;bottom:1.5rem;left:50%;transform:translateX(-50%) translateY(100px);background:var(--surface2);border:1px solid var(--teal-border);color:var(--teal);padding:.75rem 1.5rem;border-radius:var(--radius-sm);font-size:.95rem;z-index:1000;transition:transform .3s ease;pointer-events:none}
 .toast.show{transform:translateX(-50%) translateY(0)}
 
+/* Salary Toggle */
+.salary-toggle{display:inline-flex;align-items:center;gap:.4rem;cursor:pointer;-webkit-tap-highlight-color:transparent;user-select:none}
+.salary-cb{width:16px;height:16px;accent-color:var(--purple);cursor:pointer;margin:0}
+.salary-label{font-size:.72rem;color:var(--text-dim)}
+.salary-detail{margin-top:.25rem;font-size:.75rem;color:var(--purple);font-family:var(--mono);line-height:1.5;display:none}
+.salary-detail.open{display:block}
+
 /* Scenario Panel */
 .scenario-panel{padding:0 1.5rem;margin-bottom:1.25rem}
 .scenario-card{background:var(--surface);border:1px solid var(--purple-border);border-radius:var(--radius);padding:1.25rem}
 .scenario-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:.85rem}
 .scenario-title{font-size:.75rem;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:var(--purple)}
-.scenario-actions{display:flex;gap:.4rem}
 .scenario-list{display:flex;flex-direction:column;gap:.5rem}
 .scenario-item{display:flex;justify-content:space-between;align-items:center;background:var(--surface2);border-radius:var(--radius-sm);padding:.7rem 1rem;cursor:pointer;border:1px solid transparent;transition:border-color .15s}
 .scenario-item:hover{border-color:var(--border-focus)}
@@ -100,19 +106,10 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);line-height:
 .scenario-item-actions{display:flex;gap:.3rem;margin-left:.5rem;flex-shrink:0}
 .scenario-empty{font-size:.85rem;color:var(--text-dim);text-align:center;padding:1rem}
 
-/* Save Dialog */
-.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:200;display:flex;align-items:center;justify-content:center;padding:1rem;opacity:0;pointer-events:none;transition:opacity .2s}
-.modal-overlay.open{opacity:1;pointer-events:auto}
-.modal-box{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:1.5rem;width:100%;max-width:400px}
-.modal-title{font-size:1.05rem;font-weight:700;margin-bottom:1rem;color:var(--text)}
-.modal-input{width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:.65rem .85rem;font-family:var(--font);font-size:.95rem;color:var(--text);outline:none;margin-bottom:1rem}
-.modal-input:focus{border-color:var(--border-focus)}
-.modal-btns{display:flex;gap:.5rem;justify-content:flex-end}
-
-/* Compare Panel */
+/* Compare */
 .compare-wrapper{padding:0 1.5rem;margin-bottom:1.25rem}
-.compare-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden}
-.compare-table{width:100%;border-collapse:collapse;font-size:.85rem}
+.compare-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);overflow-x:auto}
+.compare-table{width:100%;border-collapse:collapse;font-size:.85rem;min-width:400px}
 .compare-table th{background:var(--surface2);padding:.6rem .85rem;text-align:left;font-weight:500;font-size:.72rem;text-transform:uppercase;letter-spacing:.08em;color:var(--text-dim);border-bottom:1px solid var(--border)}
 .compare-table th:not(:first-child){text-align:right}
 .compare-table td{padding:.55rem .85rem;border-bottom:1px solid var(--border);color:var(--text-muted)}
@@ -120,6 +117,15 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);line-height:
 .compare-table tr:last-child td{border-bottom:none}
 .compare-table td.label-cell{color:var(--text);font-weight:500}
 .compare-table .row-highlight td{background:var(--surface2)}
+
+/* Modal */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:200;display:flex;align-items:center;justify-content:center;padding:1rem;opacity:0;pointer-events:none;transition:opacity .2s}
+.modal-overlay.open{opacity:1;pointer-events:auto}
+.modal-box{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:1.5rem;width:100%;max-width:400px}
+.modal-title{font-size:1.05rem;font-weight:700;margin-bottom:1rem;color:var(--text)}
+.modal-input{width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:.65rem .85rem;font-family:var(--font);font-size:.95rem;color:var(--text);outline:none;margin-bottom:1rem}
+.modal-input:focus{border-color:var(--border-focus)}
+.modal-btns{display:flex;gap:.5rem;justify-content:flex-end}
 
 @media(max-width:599px){
   .cost-row{grid-template-columns:1fr 100px 36px}.cost-row.header-row{grid-template-columns:1fr 100px 36px}
@@ -129,64 +135,40 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);line-height:
 }
 @media(min-width:600px){.summary-grid{grid-template-columns:repeat(4,1fr)}}
 
-/* PRINT */
 @media print{
   @page{size:A4;margin:16mm 14mm}
   *{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important}
-  html{font-size:10.5px}
-  body{background:#fff!important;color:#1a1a1a!important}
-  .container{max-width:100%}
+  html{font-size:10.5px}body{background:#fff!important;color:#1a1a1a!important}.container{max-width:100%}
   .header{position:static!important;background:#fff!important;backdrop-filter:none!important;border-bottom:2px solid #1a1a1a;padding:0 0 .75rem;margin-bottom:.75rem}
-  .header-label{color:#c0392b!important;font-size:.85rem}
-  .header-title{color:#1a1a1a!important;font-size:2.2rem}
-  .header-sub{color:#666!important;font-size:1rem}
+  .header-label{color:#c0392b!important;font-size:.85rem}.header-title{color:#1a1a1a!important;font-size:2.2rem}.header-sub{color:#666!important;font-size:1rem}
   .header::after{content:"Stand: " attr(data-date) " · Vertraulich";display:block;font-size:.85rem;color:#999;margin-top:.25rem}
   .header-actions{display:none!important}
   .summary-grid{grid-template-columns:repeat(4,1fr)!important;padding:.75rem 0;gap:.6rem}
   .summary-card{background:#f5f5f5!important;border:1px solid #ddd!important;border-radius:6px;padding:.75rem .85rem}
-  .summary-label{color:#555!important;font-size:.75rem}
-  .summary-value{font-size:1.5rem}
-  .summary-value.val-neutral{color:#1a1a1a!important}
-  .summary-value.val-positive{color:#0a7a48!important}
-  .summary-value.val-negative{color:#c0392b!important}
+  .summary-label{color:#555!important;font-size:.75rem}.summary-value{font-size:1.5rem}
+  .summary-value.val-neutral{color:#1a1a1a!important}.summary-value.val-positive{color:#0a7a48!important}.summary-value.val-negative{color:#c0392b!important}
   .summary-sub{color:#888!important}
-  .runway-bar-container{padding:0 0 .75rem}
-  .runway-bar-wrapper{background:#f5f5f5!important;border:1px solid #ddd!important;border-radius:6px;padding:.75rem .85rem}
-  .runway-label{color:#555!important}
-  .runway-months.val-positive{color:#0a7a48!important}
-  .runway-months.val-amber{color:#9a6800!important}
-  .runway-months.val-negative{color:#c0392b!important}
-  .runway-track{background:#e0e0e0!important;height:8px}
-  .runway-marks span{color:#999!important}
-  .budget-input-section{padding:0;margin-bottom:.75rem}
-  .budget-card{background:#fffcf2!important;border:1px solid #d4b84a!important;border-radius:6px;padding:.75rem .85rem}
-  .budget-label{color:#7a5a00!important}
-  .budget-label small{color:#888!important}
-  .section-wrapper,.startup-section{padding:0;margin-bottom:.6rem}
-  .section-head{padding:.75rem 0 .35rem}
-  .section-title{color:#555!important;font-size:.7rem}
-  .section-total{color:#1a1a1a!important;font-size:1rem}
+  .runway-bar-container{padding:0 0 .75rem}.runway-bar-wrapper{background:#f5f5f5!important;border:1px solid #ddd!important;border-radius:6px;padding:.75rem .85rem}
+  .runway-label{color:#555!important}.runway-months.val-positive{color:#0a7a48!important}.runway-months.val-amber{color:#9a6800!important}.runway-months.val-negative{color:#c0392b!important}
+  .runway-track{background:#e0e0e0!important;height:8px}.runway-marks span{color:#999!important}
+  .budget-input-section{padding:0;margin-bottom:.75rem}.budget-card{background:#fffcf2!important;border:1px solid #d4b84a!important;border-radius:6px;padding:.75rem .85rem}
+  .budget-label{color:#7a5a00!important}.budget-label small{color:#888!important}
+  .section-wrapper,.startup-section{padding:0;margin-bottom:.6rem}.section-head{padding:.75rem 0 .35rem}
+  .section-title{color:#555!important;font-size:.7rem}.section-total{color:#1a1a1a!important;font-size:1rem}
   .cost-table{background:#fff!important;border:1px solid #ccc!important;border-radius:6px}
   .cost-row{border-bottom:1px solid #eee!important;padding:.5rem .85rem;grid-template-columns:1fr 100px 90px!important}
   .cost-row.header-row{background:#f0f0f0!important;grid-template-columns:1fr 100px 90px!important}
-  .cost-row.header-row span{color:#555!important}
-  .cost-name{color:#1a1a1a!important;font-size:.95rem}
-  .cost-name small{color:#777!important;font-size:.8rem}
+  .cost-row.header-row span{color:#555!important}.cost-name{color:#1a1a1a!important;font-size:.95rem}.cost-name small{color:#777!important;font-size:.8rem}
   .cost-annual{color:#1a1a1a!important;font-size:.9rem;display:block!important}
   .cost-input{background:transparent!important;border:none!important;color:#1a1a1a!important;font-size:.95rem;padding:0}
   .delete-btn,.add-row-btn,.actions,.toast,.scenario-panel,.compare-wrapper{display:none!important}
-  .revenue-section{padding:0;margin-bottom:.75rem}
-  .revenue-card{background:#fff!important;border:1px solid #ccc!important;border-radius:6px;padding:.85rem}
-  .rev-row{border-bottom:1px solid #eee!important;grid-template-columns:1fr 120px}
-  .rev-label{color:#1a1a1a!important}
-  .rev-label small{color:#777!important}
-  .chart-wrapper{padding:0 0 .75rem}
-  .chart-card{background:#f8f8f8!important;border:1px solid #ccc!important;border-radius:6px;padding:1rem}
-  .chart-title{color:#555!important}
-  .bar-cost{background:#d44!important;opacity:.85!important}
-  .bar-rev{background:#0a7a48!important;opacity:.85!important}
-  .bar-month{color:#555!important}
-  .legend-item{color:#555!important}
+  .salary-detail.open{display:block!important;color:#555!important}
+  .salary-toggle{display:none!important}
+  .revenue-section{padding:0;margin-bottom:.75rem}.revenue-card{background:#fff!important;border:1px solid #ccc!important;border-radius:6px;padding:.85rem}
+  .rev-row{border-bottom:1px solid #eee!important}.rev-label{color:#1a1a1a!important}.rev-label small{color:#777!important}
+  .chart-wrapper{padding:0 0 .75rem}.chart-card{background:#f8f8f8!important;border:1px solid #ccc!important;border-radius:6px;padding:1rem}
+  .chart-title{color:#555!important}.bar-cost{background:#d44!important;opacity:.85!important}.bar-rev{background:#0a7a48!important;opacity:.85!important}
+  .bar-month{color:#555!important}.legend-item{color:#555!important}
   .section-wrapper,.startup-section,.revenue-section,.chart-wrapper{page-break-inside:avoid}
   .print-footer{display:block!important;border-top:1px solid #ccc;padding-top:.6rem;margin-top:1rem;font-size:.8rem;color:#aaa;text-align:center}
 }
@@ -206,27 +188,15 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);line-height:
     </div>
   </div>
 
-  <!-- Scenario Panel -->
-  <div class="scenario-panel">
-    <div class="scenario-card">
-      <div class="scenario-header">
-        <span class="scenario-title">Gespeicherte Szenarien</span>
-        <div class="scenario-actions">
-          <button class="btn btn-secondary btn-sm" onclick="toggleCompare()" id="compareBtn" style="display:none">Vergleichen</button>
-        </div>
-      </div>
-      <div class="scenario-list" id="scenarioList">
-        <div class="scenario-empty">Noch keine Szenarien gespeichert. Passe die Werte an und klicke "Szenario speichern".</div>
-      </div>
+  <div class="scenario-panel"><div class="scenario-card">
+    <div class="scenario-header">
+      <span class="scenario-title">Gespeicherte Szenarien</span>
+      <button class="btn btn-secondary btn-sm" onclick="toggleCompare()" id="compareBtn" style="display:none">Vergleichen</button>
     </div>
-  </div>
+    <div class="scenario-list" id="scenarioList"><div class="scenario-empty">Noch keine Szenarien gespeichert.</div></div>
+  </div></div>
 
-  <!-- Compare Table (hidden by default) -->
-  <div class="compare-wrapper" id="compareWrapper" style="display:none">
-    <div class="compare-card">
-      <table class="compare-table" id="compareTable"></table>
-    </div>
-  </div>
+  <div class="compare-wrapper" id="compareWrapper" style="display:none"><div class="compare-card"><table class="compare-table" id="compareTable"></table></div></div>
 
   <div class="summary-grid">
     <div class="summary-card"><div class="summary-label">Kosten / Monat</div><div class="summary-value val-neutral" id="sumMonthly">—</div></div>
@@ -246,7 +216,7 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);line-height:
     <input type="number" class="cost-input" id="startBudget" value="300000" step="10000" oninput="recalc()">
   </div></div></div>
 
-  <div class="section-wrapper"><div class="section-head"><span class="section-title">Personalkosten (brutto inkl. AG-Anteil)</span><span class="section-total" id="totalPersonnel">—</span></div>
+  <div class="section-wrapper"><div class="section-head"><span class="section-title">Personalkosten (AG-Gesamtkosten/Monat)</span><span class="section-total" id="totalPersonnel">—</span></div>
     <div class="cost-table" id="personnelTable"><div class="cost-row header-row"><span>Rolle</span><span style="text-align:right">€ / Monat</span><span style="text-align:right">€ / Jahr</span><span></span></div></div>
     <button class="add-row-btn" onclick="addRow('personnel')">+ Position hinzufügen</button></div>
 
@@ -284,44 +254,158 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);line-height:
   <div class="print-footer">CORTEX GmbH — Business Plan Jahr 1 · Vertraulich · <span id="printDate"></span></div>
 </div>
 
-<!-- Save Modal -->
-<div class="modal-overlay" id="saveModal">
-  <div class="modal-box">
-    <div class="modal-title">Szenario speichern</div>
-    <input type="text" class="modal-input" id="scenarioNameInput" placeholder="z.B. Lean Start, Full Team, Optimistisch..." autofocus>
-    <div class="modal-btns">
-      <button class="btn btn-secondary btn-sm" onclick="closeSaveModal()">Abbrechen</button>
-      <button class="btn btn-primary btn-sm" onclick="saveScenario()">Speichern</button>
-    </div>
-  </div>
-</div>
+<div class="modal-overlay" id="saveModal"><div class="modal-box">
+  <div class="modal-title">Szenario speichern</div>
+  <input type="text" class="modal-input" id="scenarioNameInput" placeholder="z.B. Lean Start, Full Team, Optimistisch...">
+  <div class="modal-btns"><button class="btn btn-secondary btn-sm" onclick="closeSaveModal()">Abbrechen</button><button class="btn btn-primary btn-sm" onclick="saveScenario()">Speichern</button></div>
+</div></div>
 
 <div class="toast" id="toast"></div>
 
 <script>
-const DEFAULTS={
-  personnel:[{name:'Hannes (CTO)',note:'Vollzeit, inkl. AG-Anteil',monthly:7500},{name:'Lorenz (CEO)',note:'Vollzeit, inkl. AG-Anteil',monthly:7500},{name:'Sales Representative',note:'Ab Monat 2–3, Vollzeit',monthly:4500},{name:'AI Engineer',note:'Ab Bedarf (Projekt 2+)',monthly:0},{name:'Assistenz Sales',note:'Teilzeit ~15h/Woche',monthly:1200}],
-  tools:[{name:'Claude (Anthropic)',note:'Team Plan + API Tokens',monthly:400},{name:'OpenAI API',note:'GPT-4o, Embeddings, Codex',monthly:300},{name:'Azure OpenAI',note:'DSGVO-konform, EU Region',monthly:500},{name:'Cursor / Windsurf',note:'Coding Agents, Team Seats',monthly:100},{name:'n8n Cloud',note:'Workflow Automation',monthly:50},{name:'GitHub / GitLab',note:'Repos, CI/CD Pipelines',monthly:40}],
-  infra:[{name:'Server / Hosting',note:'Netcup, Hetzner, AWS',monthly:200},{name:'Domain & DNS',note:'cortex.at etc.',monthly:10},{name:'Büro / Coworking',note:'Optional, flexibel',monthly:0},{name:'Steuerberatung',note:'Laufend, monatlich',monthly:400},{name:'Versicherungen',note:'Berufshaftpflicht etc.',monthly:150},{name:'Reisekosten',note:'Wien, Graz, Linz, DACH',monthly:500},{name:'Marketing & Branding',note:'Website, Content, Events',monthly:300}],
-  startup:[{name:'GmbH-Gründung + Notar',note:'',amount:3000},{name:'Rechtsberatung Gesellschaftsvertrag',note:'',amount:4000},{name:'Steuerberatung Setup',note:'',amount:1500},{name:'Branding / Corporate Design',note:'',amount:2500}]
+// AG-Lohnnebenkosten Faktor AT (~30.78%: 21.03% SV-AG + 3.9% DB + 0.36% DZ + 3% KommSt + 1.53% MVK + ~1% sonstige)
+const AG_FACTOR = 1.3078;
+
+const DEFAULTS = {
+  personnel:[
+    {name:'Hannes (CTO)',note:'Vollzeit',monthly:10300,isSalary:true,brutto:6735},
+    {name:'Lorenz (CEO/Sales)',note:'Vollzeit',monthly:10300,isSalary:true,brutto:6735},
+    {name:'Assistenz Sales',note:'Teilzeit ~15h/Woche',monthly:1200,isSalary:true,brutto:785},
+  ],
+  tools:[
+    {name:'Claude (Anthropic)',note:'Team Plan + API Tokens',monthly:400},
+    {name:'OpenAI API',note:'GPT-4o, Embeddings, Codex',monthly:300},
+    {name:'Azure OpenAI',note:'DSGVO-konform, EU Region',monthly:500},
+    {name:'Cursor / Windsurf',note:'Coding Agents, Team Seats',monthly:100},
+    {name:'n8n Cloud',note:'Workflow Automation',monthly:50},
+    {name:'GitHub / GitLab',note:'Repos, CI/CD Pipelines',monthly:40},
+  ],
+  infra:[
+    {name:'Server / Hosting',note:'Netcup, Hetzner, AWS',monthly:200},
+    {name:'Domain & DNS',note:'cortex.at etc.',monthly:10},
+    {name:'Steuerberatung',note:'Laufend, monatlich',monthly:400},
+    {name:'Versicherungen',note:'Berufshaftpflicht etc.',monthly:150},
+    {name:'Reisekosten',note:'Wien, Graz, Linz, DACH',monthly:500},
+    {name:'Marketing & Branding',note:'Website, Content, Events',monthly:300},
+  ],
+  startup:[
+    {name:'GmbH-Gründung + Notar',note:'',amount:3000},
+    {name:'Rechtsberatung Gesellschaftsvertrag',note:'',amount:4000},
+    {name:'Steuerberatung Setup',note:'',amount:1500},
+    {name:'Branding / Corporate Design',note:'',amount:2500},
+  ]
 };
-let DATA=JSON.parse(JSON.stringify(DEFAULTS));
+let DATA = JSON.parse(JSON.stringify(DEFAULTS));
 
 function fmt(n){return new Intl.NumberFormat('de-AT',{style:'currency',currency:'EUR',maximumFractionDigits:0}).format(n)}
-function fmtShort(n){return n>=1000?(Math.round(n/100)/10)+'k':n+''}
+function fmtBrutto(n){return new Intl.NumberFormat('de-AT',{minimumFractionDigits:2,maximumFractionDigits:2}).format(n)}
 
-// === SCENARIO MANAGEMENT ===
-function getScenarios(){try{return JSON.parse(localStorage.getItem('cortex_scenarios')||'[]')}catch(e){return[]}}
-function saveScenarios(arr){localStorage.setItem('cortex_scenarios',JSON.stringify(arr))}
+// Salary breakdown: AG-Gesamtkosten -> Brutto (14x AT)
+function agToBrutto(agMonthly){
+  // AG monthly (12x) -> AG yearly -> Brutto yearly (÷ factor) -> Brutto monthly (÷14 because AT 14 salaries)
+  const agYearly = agMonthly * 12;
+  const bruttoYearly = agYearly / AG_FACTOR;
+  const bruttoMonthly = bruttoYearly / 14;
+  return bruttoMonthly;
+}
 
+function salaryBreakdownHTML(agMonthly, id){
+  const brutto14 = agToBrutto(agMonthly);
+  const bruttoYearly = brutto14 * 14;
+  const agYearly = agMonthly * 12;
+  const lnk = agYearly - bruttoYearly;
+  return `<div class="salary-detail" id="sal-${id}">
+    ~€ ${fmtBrutto(brutto14)} brutto/Monat (14×)<br>
+    ~€ ${fmt(Math.round(bruttoYearly))} Jahresbrutto<br>
+    ~€ ${fmt(Math.round(lnk))} AG-Lohnnebenkosten/Jahr
+  </div>`;
+}
+
+function toggleSalary(id){
+  const el = document.getElementById('sal-'+id);
+  if(el) el.classList.toggle('open');
+}
+
+// === RENDERING ===
+function renderRow(sec, idx, item){
+  const isS = sec==='startup';
+  const val = isS ? (item.amount||0) : (item.monthly||0);
+  const row = document.createElement('div');
+  row.className = 'cost-row';
+
+  let nameHTML = `<div class="cost-name">${item.name}<small>${item.note||''}`;
+  if(sec==='personnel'){
+    nameHTML += `</small>
+      <label class="salary-toggle" onclick="event.stopPropagation()">
+        <input type="checkbox" class="salary-cb" onchange="toggleSalary('${sec}-${idx}')" ${item.showSalary?'checked':''}>
+        <span class="salary-label">Gehalt anzeigen</span>
+      </label>
+      ${salaryBreakdownHTML(val, sec+'-'+idx)}
+    </div>`;
+  } else {
+    nameHTML += `</small></div>`;
+  }
+
+  row.innerHTML = `${nameHTML}
+    <input type="number" class="cost-input" value="${val}" step="${isS?500:100}" min="0" oninput="updateVal('${sec}',${idx},this.value)">
+    <span class="cost-annual">${isS?'':fmt(val*12)}</span>
+    <button class="delete-btn" onclick="deleteRow('${sec}',${idx})" title="Entfernen">×</button>`;
+
+  document.getElementById(sec+'Table').appendChild(row);
+
+  // Restore checkbox state
+  if(sec==='personnel' && item.showSalary){
+    const det = row.querySelector('.salary-detail');
+    if(det) det.classList.add('open');
+  }
+}
+
+function renderAll(){
+  ['personnel','tools','infra','startup'].forEach(s=>{
+    const t=document.getElementById(s+'Table'),h=t.querySelector('.header-row');
+    t.innerHTML='';t.appendChild(h);
+    DATA[s].forEach((item,i)=>renderRow(s,i,item));
+  });
+  recalc();
+}
+
+function updateVal(s,i,v){
+  v=parseFloat(v)||0;
+  if(s==='startup') DATA[s][i].amount=v;
+  else DATA[s][i].monthly=v;
+  // Update salary breakdown if personnel
+  if(s==='personnel'){
+    const det=document.getElementById('sal-'+s+'-'+i);
+    if(det){
+      const brutto14=agToBrutto(v);
+      const bruttoYearly=brutto14*14;
+      const agYearly=v*12;
+      const lnk=agYearly-bruttoYearly;
+      det.innerHTML=`~€ ${fmtBrutto(brutto14)} brutto/Monat (14×)<br>~€ ${fmt(Math.round(bruttoYearly))} Jahresbrutto<br>~€ ${fmt(Math.round(lnk))} AG-Lohnnebenkosten/Jahr`;
+    }
+  }
+  recalc();
+}
+
+function deleteRow(s,i){DATA[s].splice(i,1);renderAll()}
+
+function addRow(s){
+  const d={
+    personnel:{name:'Neue Position',note:'',monthly:0,isSalary:true},
+    tools:{name:'Neues Tool',note:'',monthly:0},
+    infra:{name:'Neuer Posten',note:'',monthly:0},
+    startup:{name:'Neuer Posten',note:'',amount:0}
+  };
+  DATA[s].push({...d[s]});renderAll();
+}
+
+// === CALCULATION ===
 function getSnapshot(){
-  return{
-    data:JSON.parse(JSON.stringify(DATA)),
+  return{data:JSON.parse(JSON.stringify(DATA)),
     budget:parseFloat(document.getElementById('startBudget').value)||0,
     projects:parseFloat(document.getElementById('revProjects').value)||0,
     volume:parseFloat(document.getElementById('revVolume').value)||0,
-    rampup:parseInt(document.getElementById('revRampup').value)||0,
-  };
+    rampup:parseInt(document.getElementById('revRampup').value)||0};
 }
 
 function calcKPIs(snap){
@@ -331,146 +415,15 @@ function calcKPIs(snap){
   const iT=d.infra.reduce((s,i)=>s+(i.monthly||0),0);
   const sT=d.startup.reduce((s,i)=>s+(i.amount||0),0);
   const mo=pT+tT+iT,an=mo*12+sT;
-  const rm=snap.projects*snap.volume;
-  const actM=Math.max(0,12-snap.rampup);
-  const ra=rm*actM,res=ra-an;
+  const rm=snap.projects*snap.volume,actM=Math.max(0,12-snap.rampup),ra=rm*actM,res=ra-an;
   let rw=0,bal=snap.budget-sT;
   for(let m=1;m<=24;m++){bal=bal-mo+(m>snap.rampup?rm:0);if(bal>=0)rw=m;else break}
   if(bal>=0)rw=24;
-  return{monthly:mo,annual:an,revMonth:rm,revAnnual:ra,result:res,runway:rw,startupCosts:sT};
+  return{monthly:mo,annual:an,revMonth:rm,revAnnual:ra,result:res,runway:rw};
 }
-
-function openSaveModal(){
-  document.getElementById('saveModal').classList.add('open');
-  const inp=document.getElementById('scenarioNameInput');
-  inp.value='';inp.focus();
-}
-function closeSaveModal(){document.getElementById('saveModal').classList.remove('open')}
-
-document.getElementById('scenarioNameInput').addEventListener('keydown',e=>{if(e.key==='Enter')saveScenario()});
-
-function saveScenario(){
-  const name=document.getElementById('scenarioNameInput').value.trim();
-  if(!name){showToast('Bitte einen Namen eingeben');return}
-  const scenarios=getScenarios();
-  const snap=getSnapshot();
-  const kpis=calcKPIs(snap);
-  scenarios.push({id:Date.now(),name,snap,kpis,date:new Date().toLocaleDateString('de-AT',{day:'2-digit',month:'2-digit',year:'numeric'})});
-  saveScenarios(scenarios);
-  closeSaveModal();
-  renderScenarios();
-  showToast('Szenario "'+name+'" gespeichert');
-}
-
-function loadScenario(id){
-  const scenarios=getScenarios();
-  const sc=scenarios.find(s=>s.id===id);
-  if(!sc)return;
-  DATA=JSON.parse(JSON.stringify(sc.snap.data));
-  document.getElementById('startBudget').value=sc.snap.budget;
-  document.getElementById('revProjects').value=sc.snap.projects;
-  document.getElementById('revVolume').value=sc.snap.volume;
-  document.getElementById('revRampup').value=sc.snap.rampup;
-  renderAll();
-  renderScenarios(id);
-  showToast('"'+sc.name+'" geladen');
-}
-
-function deleteScenario(id,e){
-  e.stopPropagation();
-  const scenarios=getScenarios().filter(s=>s.id!==id);
-  saveScenarios(scenarios);
-  renderScenarios();
-  showToast('Szenario gelöscht');
-}
-
-function renderScenarios(activeId){
-  const list=document.getElementById('scenarioList');
-  const scenarios=getScenarios();
-  const cmpBtn=document.getElementById('compareBtn');
-  cmpBtn.style.display=scenarios.length>=2?'':'none';
-
-  if(!scenarios.length){
-    list.innerHTML='<div class="scenario-empty">Noch keine Szenarien gespeichert. Passe die Werte an und klicke "Szenario speichern".</div>';
-    return;
-  }
-  list.innerHTML=scenarios.map(sc=>{
-    const k=sc.kpis;
-    const isActive=sc.id===activeId;
-    return`<div class="scenario-item${isActive?' active':''}" onclick="loadScenario(${sc.id})">
-      <div class="scenario-item-left">
-        <div class="scenario-item-name">${sc.name}</div>
-        <div class="scenario-item-meta">${sc.date} · Startkapital ${fmt(sc.snap.budget)}</div>
-        <div class="scenario-item-kpi">
-          <span>${fmt(k.monthly)}/m</span>
-          <span style="color:${k.result>=0?'var(--green)':'var(--red)'}">Ergebnis ${fmt(k.result)}</span>
-          <span>${k.runway>=24?'24+':k.runway} Mon.</span>
-        </div>
-      </div>
-      <div class="scenario-item-actions">
-        <button class="btn btn-danger btn-sm" onclick="deleteScenario(${sc.id},event)" style="padding:.35rem .6rem;font-size:.7rem">×</button>
-      </div>
-    </div>`;
-  }).join('');
-}
-
-function toggleCompare(){
-  const w=document.getElementById('compareWrapper');
-  if(w.style.display==='none'){
-    w.style.display='';
-    renderCompare();
-  }else{
-    w.style.display='none';
-  }
-}
-
-function renderCompare(){
-  const scenarios=getScenarios();
-  if(scenarios.length<2)return;
-  const table=document.getElementById('compareTable');
-  const headers=['<th>Kennzahl</th>',...scenarios.map(s=>`<th>${s.name}</th>`)].join('');
-  const rows=[
-    {label:'Kosten / Monat',key:'monthly'},
-    {label:'Kosten / Jahr',key:'annual'},
-    {label:'Umsatz / Monat',key:'revMonth'},
-    {label:'Ergebnis / Jahr',key:'result',highlight:true},
-    {label:'Runway',key:'runway',isRunway:true},
-    {label:'Startkapital',key:'budget',isBudget:true},
-  ];
-  const body=rows.map(r=>{
-    const cls=r.highlight?' class="row-highlight"':'';
-    const cells=scenarios.map(s=>{
-      if(r.isRunway)return`<td>${s.kpis.runway>=24?'24+':s.kpis.runway} Mon.</td>`;
-      if(r.isBudget)return`<td>${fmt(s.snap.budget)}</td>`;
-      const v=s.kpis[r.key];
-      const color=r.highlight?(v>=0?'color:var(--green)':'color:var(--red)'):'';
-      return`<td style="${color}">${fmt(v)}</td>`;
-    }).join('');
-    return`<tr${cls}><td class="label-cell">${r.label}</td>${cells}</tr>`;
-  }).join('');
-  table.innerHTML=`<thead><tr>${headers}</tr></thead><tbody>${body}</tbody>`;
-}
-
-// === CORE LOGIC ===
-function renderRow(sec,idx,item){
-  const isS=sec==='startup',val=isS?(item.amount||0):(item.monthly||0);
-  const row=document.createElement('div');row.className='cost-row';
-  row.innerHTML=`<div class="cost-name">${item.name}<small>${item.note||''}</small></div>
-    <input type="number" class="cost-input" value="${val}" step="${isS?500:100}" min="0" oninput="updateVal('${sec}',${idx},this.value)">
-    <span class="cost-annual">${isS?'':fmt(val*12)}</span>
-    <button class="delete-btn" onclick="deleteRow('${sec}',${idx})" title="Entfernen">×</button>`;
-  document.getElementById(sec+'Table').appendChild(row);
-}
-function renderAll(){
-  ['personnel','tools','infra','startup'].forEach(s=>{const t=document.getElementById(s+'Table'),h=t.querySelector('.header-row');t.innerHTML='';t.appendChild(h);DATA[s].forEach((item,i)=>renderRow(s,i,item))});recalc();
-}
-function updateVal(s,i,v){v=parseFloat(v)||0;if(s==='startup')DATA[s][i].amount=v;else DATA[s][i].monthly=v;recalc()}
-function deleteRow(s,i){DATA[s].splice(i,1);renderAll()}
-function addRow(s){const d={personnel:{name:'Neue Position',note:'',monthly:0},tools:{name:'Neues Tool',note:'',monthly:0},infra:{name:'Neuer Posten',note:'',monthly:0},startup:{name:'Neuer Posten',note:'',amount:0}};DATA[s].push({...d[s]});renderAll()}
 
 function recalc(){
-  const snap=getSnapshot();
-  const k=calcKPIs(snap);
+  const snap=getSnapshot(),k=calcKPIs(snap);
   document.getElementById('sumMonthly').textContent=fmt(k.monthly);
   document.getElementById('sumAnnual').textContent=fmt(k.annual);
   document.getElementById('sumRevMonth').textContent=fmt(k.revMonth);
@@ -505,40 +458,93 @@ function renderChart(mo,rm,ramp){
   }
 }
 
+// === SCENARIOS ===
+function getScenarios(){try{return JSON.parse(localStorage.getItem('cortex_scenarios')||'[]')}catch(e){return[]}}
+function saveScenarios(arr){localStorage.setItem('cortex_scenarios',JSON.stringify(arr))}
+
+function openSaveModal(){document.getElementById('saveModal').classList.add('open');const i=document.getElementById('scenarioNameInput');i.value='';setTimeout(()=>i.focus(),100)}
+function closeSaveModal(){document.getElementById('saveModal').classList.remove('open')}
+document.getElementById('scenarioNameInput').addEventListener('keydown',e=>{if(e.key==='Enter')saveScenario()});
+
+function saveScenario(){
+  const name=document.getElementById('scenarioNameInput').value.trim();
+  if(!name){showToast('Bitte einen Namen eingeben');return}
+  const scenarios=getScenarios(),snap=getSnapshot(),kpis=calcKPIs(snap);
+  scenarios.push({id:Date.now(),name,snap,kpis,date:new Date().toLocaleDateString('de-AT',{day:'2-digit',month:'2-digit',year:'numeric'})});
+  saveScenarios(scenarios);closeSaveModal();renderScenarios();showToast('"'+name+'" gespeichert');
+}
+
+function loadScenario(id){
+  const sc=getScenarios().find(s=>s.id===id);if(!sc)return;
+  DATA=JSON.parse(JSON.stringify(sc.snap.data));
+  document.getElementById('startBudget').value=sc.snap.budget;
+  document.getElementById('revProjects').value=sc.snap.projects;
+  document.getElementById('revVolume').value=sc.snap.volume;
+  document.getElementById('revRampup').value=sc.snap.rampup;
+  renderAll();renderScenarios(id);showToast('"'+sc.name+'" geladen');
+}
+
+function deleteScenario(id,e){e.stopPropagation();saveScenarios(getScenarios().filter(s=>s.id!==id));renderScenarios();showToast('Gelöscht')}
+
+function renderScenarios(activeId){
+  const list=document.getElementById('scenarioList'),scenarios=getScenarios();
+  document.getElementById('compareBtn').style.display=scenarios.length>=2?'':'none';
+  if(!scenarios.length){list.innerHTML='<div class="scenario-empty">Noch keine Szenarien gespeichert.</div>';return}
+  list.innerHTML=scenarios.map(sc=>`<div class="scenario-item${sc.id===activeId?' active':''}" onclick="loadScenario(${sc.id})">
+    <div class="scenario-item-left"><div class="scenario-item-name">${sc.name}</div>
+      <div class="scenario-item-meta">${sc.date} · Startkapital ${fmt(sc.snap.budget)}</div>
+      <div class="scenario-item-kpi"><span>${fmt(sc.kpis.monthly)}/m</span><span style="color:${sc.kpis.result>=0?'var(--green)':'var(--red)'}">Ergebnis ${fmt(sc.kpis.result)}</span><span>${sc.kpis.runway>=24?'24+':sc.kpis.runway} Mon.</span></div>
+    </div><div class="scenario-item-actions"><button class="btn btn-danger btn-sm" onclick="deleteScenario(${sc.id},event)" style="padding:.35rem .6rem;font-size:.7rem">×</button></div></div>`).join('');
+}
+
+function toggleCompare(){const w=document.getElementById('compareWrapper');if(w.style.display==='none'){w.style.display='';renderCompare()}else{w.style.display='none'}}
+
+function renderCompare(){
+  const scenarios=getScenarios();if(scenarios.length<2)return;
+  const t=document.getElementById('compareTable');
+  const rows=[{l:'Kosten / Monat',k:'monthly'},{l:'Kosten / Jahr',k:'annual'},{l:'Umsatz / Monat',k:'revMonth'},{l:'Ergebnis / Jahr',k:'result',hl:true},{l:'Runway',k:'runway',rw:true},{l:'Startkapital',bud:true}];
+  t.innerHTML=`<thead><tr><th>Kennzahl</th>${scenarios.map(s=>'<th>'+s.name+'</th>').join('')}</tr></thead><tbody>${rows.map(r=>{
+    const cls=r.hl?' class="row-highlight"':'';
+    return`<tr${cls}><td class="label-cell">${r.l}</td>${scenarios.map(s=>{
+      if(r.rw)return`<td>${s.kpis.runway>=24?'24+':s.kpis.runway} Mon.</td>`;
+      if(r.bud)return`<td>${fmt(s.snap.budget)}</td>`;
+      const v=s.kpis[r.k];return`<td style="${r.hl?(v>=0?'color:var(--green)':'color:var(--red)'):''}">${fmt(v)}</td>`;
+    }).join('')}</tr>`;
+  }).join('')}</tbody>`;
+}
+
+// === UTILS ===
 function downloadCSV(){
   let csv='Kategorie;Posten;Notiz;Monatlich (€);Jährlich (€)\n';
-  DATA.personnel.forEach(i=>csv+=`Personal;${i.name};${i.note||''};${i.monthly};${i.monthly*12}\n`);
+  DATA.personnel.forEach(i=>{const b=agToBrutto(i.monthly);csv+=`Personal;${i.name};${i.note||''} (Brutto: €${fmtBrutto(b)} x14);${i.monthly};${i.monthly*12}\n`});
   DATA.tools.forEach(i=>csv+=`Tools;${i.name};${i.note||''};${i.monthly};${i.monthly*12}\n`);
   DATA.infra.forEach(i=>csv+=`Infra;${i.name};${i.note||''};${i.monthly};${i.monthly*12}\n`);
   csv+='\nEinmalkosten;Posten;Betrag;\n';DATA.startup.forEach(i=>csv+=`Einmal;${i.name};${i.amount};\n`);
   const snap=getSnapshot(),k=calcKPIs(snap);
   csv+=`\nParameter;Wert;\nProjekte/Monat;${snap.projects};\nProjektvolumen;${snap.volume};\nRamp-up;${snap.rampup};\nStartkapital;${snap.budget};\n`;
-  csv+=`\nZusammenfassung;Wert;\nKosten/Monat;${k.monthly};\nKosten/Jahr;${k.annual};\nUmsatz/Monat;${k.revMonth};\nErgebnis/Jahr;${k.result};\nRunway;${k.runway};\n`;
+  csv+=`\nZusammenfassung;Wert;\nKosten/Monat;${k.monthly};\nKosten/Jahr;${k.annual};\nUmsatz/Monat;${k.revMonth};\nErgebnis/Jahr;${k.result};\nRunway;${k.runway} Mon.;\n`;
   const blob=new Blob(['\uFEFF'+csv],{type:'text/csv;charset=utf-8;'});
-  const url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download='cortex_businessplan.csv';a.click();URL.revokeObjectURL(url);
-  showToast('CSV heruntergeladen');
+  const u=URL.createObjectURL(blob),a=document.createElement('a');a.href=u;a.download='cortex_businessplan.csv';a.click();URL.revokeObjectURL(u);showToast('CSV heruntergeladen');
 }
 
 function printPDF(){
   const d=new Date().toLocaleDateString('de-AT',{day:'2-digit',month:'2-digit',year:'numeric'});
-  document.getElementById('printHeader').setAttribute('data-date',d);
-  document.getElementById('printDate').textContent=d;
+  document.getElementById('printHeader').setAttribute('data-date',d);document.getElementById('printDate').textContent=d;
+  // Show all salary details for print
+  document.querySelectorAll('.salary-detail').forEach(el=>el.classList.add('open'));
   window.print();
 }
 
 function resetAll(){
   DATA=JSON.parse(JSON.stringify(DEFAULTS));
   document.getElementById('startBudget').value=300000;
-  document.getElementById('revProjects').value=1;
-  document.getElementById('revVolume').value=15000;
-  document.getElementById('revRampup').value=3;
+  document.getElementById('revProjects').value=1;document.getElementById('revVolume').value=15000;document.getElementById('revRampup').value=3;
   renderAll();showToast('Zurückgesetzt');
 }
 
 function showToast(m){const t=document.getElementById('toast');t.textContent=m;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2000)}
 
-renderAll();
-renderScenarios();
+renderAll();renderScenarios();
 </script>
 </body>
 </html>
