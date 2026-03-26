@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+<title>CORTEX — Business Plan Jahr 1</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0C0B0F;--surface:#16151B;--surface2:#1E1D25;--surface3:#28272F;--border:rgba(255,255,255,0.06);--border-focus:rgba(155,138,255,0.4);--text:#E8E6F0;--text-muted:#9490A8;--text-dim:#6B6780;--coral:#E8593C;--coral-bg:rgba(232,89,60,0.1);--coral-border:rgba(232,89,60,0.2);--teal:#2DD4A8;--teal-bg:rgba(45,212,168,0.08);--teal-border:rgba(45,212,168,0.18);--amber:#F0A030;--amber-bg:rgba(240,160,48,0.08);--amber-border:rgba(240,160,48,0.18);--purple:#9B8AFF;--purple-bg:rgba(155,138,255,0.08);--purple-border:rgba(155,138,255,0.18);--red:#F06060;--green:#44D490;--font:'DM Sans',-apple-system,sans-serif;--mono:'DM Mono',monospace;--radius:14px;--radius-sm:10px}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth;font-size:16px}
+body{font-family:var(--font);background:var(--bg);color:var(--text);line-height:1.55;-webkit-font-smoothing:antialiased;min-height:100vh}
+.container{max-width:860px;margin:0 auto}
+.header{padding:2.5rem 1.5rem 1.75rem;border-bottom:1px solid var(--border);position:sticky;top:0;z-index:100;background:rgba(12,11,15,0.92);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px)}
+.header-label{font-size:.75rem;letter-spacing:.18em;text-transform:uppercase;color:var(--coral);font-weight:700;margin-bottom:.35rem}
+.header-title{font-size:1.75rem;font-weight:700;color:var(--text)}
+.header-sub{font-size:.95rem;color:var(--text-muted);margin-top:.3rem}
+.header-actions{display:flex;gap:.5rem;margin-top:1rem;flex-wrap:wrap}
+.summary-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:.85rem;padding:1.5rem}
+.summary-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:1.1rem 1.25rem}
+.summary-label{font-size:.75rem;text-transform:uppercase;letter-spacing:.12em;color:var(--text-dim);font-weight:500;margin-bottom:.3rem}
+.summary-value{font-family:var(--mono);font-size:1.65rem;font-weight:500}
+.summary-sub{font-size:.8rem;color:var(--text-dim);margin-top:.2rem}
+.val-positive{color:var(--green)}.val-negative{color:var(--red)}.val-neutral{color:var(--text)}.val-amber{color:var(--amber)}
+.runway-bar-container{padding:0 1.5rem 1.25rem}
+.runway-bar-wrapper{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:1.1rem 1.25rem}
+.runway-label-row{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:.6rem}
+.runway-label{font-size:.75rem;text-transform:uppercase;letter-spacing:.12em;color:var(--text-dim);font-weight:500}
+.runway-months{font-family:var(--mono);font-size:1.2rem;font-weight:500}
+.runway-track{height:10px;background:var(--surface3);border-radius:5px;overflow:hidden}
+.runway-fill{height:100%;border-radius:5px;transition:width .4s ease,background .3s;min-width:2%}
+.runway-marks{display:flex;justify-content:space-between;margin-top:.4rem}
+.runway-marks span{font-size:.7rem;color:var(--text-dim)}
+.section-wrapper{padding:0 1.5rem;margin-bottom:1rem}
+.section-head{display:flex;justify-content:space-between;align-items:center;padding:1.25rem 0 .6rem}
+.section-title{font-size:.75rem;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:var(--text-dim)}
+.section-total{font-family:var(--mono);font-size:1.05rem;font-weight:500;color:var(--text-muted)}
+.cost-table{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden}
+.cost-row{display:grid;grid-template-columns:1fr 120px 100px 36px;align-items:center;padding:.85rem 1.25rem;gap:.6rem;border-bottom:1px solid var(--border)}
+.cost-row:last-child{border-bottom:none}
+.cost-row.header-row{background:var(--surface2);padding:.6rem 1.25rem;grid-template-columns:1fr 120px 100px 36px}
+.cost-row.header-row span{font-size:.7rem;text-transform:uppercase;letter-spacing:.08em;color:var(--text-dim);font-weight:500}
+.cost-name{font-size:.95rem;color:var(--text);font-weight:500}
+.cost-name small{display:block;font-size:.8rem;color:var(--text-dim);font-weight:400;margin-top:.1rem}
+.cost-input{background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:.55rem .65rem;font-family:var(--mono);font-size:.95rem;color:var(--text);text-align:right;width:100%;outline:none;transition:border-color .15s;-moz-appearance:textfield}
+.cost-input::-webkit-inner-spin-button,.cost-input::-webkit-outer-spin-button{-webkit-appearance:none}
+.cost-input:focus{border-color:var(--border-focus)}
+.cost-annual{font-family:var(--mono);font-size:.9rem;color:var(--text-muted);text-align:right}
+.add-row-btn{display:flex;align-items:center;justify-content:center;gap:.4rem;width:100%;padding:.75rem;background:none;border:1px dashed var(--border);border-top:none;border-radius:0 0 var(--radius) var(--radius);color:var(--text-dim);font-size:.85rem;font-family:var(--font);cursor:pointer;transition:color .15s,background .15s}
+.add-row-btn:hover,.add-row-btn:active{color:var(--purple);background:var(--purple-bg)}
+.delete-btn{background:none;border:none;color:var(--text-dim);cursor:pointer;font-size:1.1rem;padding:.25rem;border-radius:4px;transition:color .15s;line-height:1}
+.delete-btn:hover{color:var(--coral)}
+.revenue-section{padding:0 1.5rem;margin-bottom:1.25rem}
+.revenue-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:1.25rem}
+.rev-row{display:grid;grid-template-columns:1fr 130px;align-items:center;gap:.6rem;padding:.65rem 0;border-bottom:1px solid var(--border)}
+.rev-row:last-child{border-bottom:none}
+.rev-label{font-size:.95rem;color:var(--text);font-weight:500}
+.rev-label small{display:block;font-size:.8rem;color:var(--text-dim);font-weight:400}
+.chart-wrapper{padding:0 1.5rem 1.25rem}
+.chart-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:1.25rem}
+.chart-title{font-size:.75rem;text-transform:uppercase;letter-spacing:.12em;color:var(--text-dim);font-weight:500;margin-bottom:1rem}
+.bar-chart{display:flex;align-items:flex-end;gap:4px;height:160px;padding-top:.5rem}
+.bar-group{flex:1;display:flex;flex-direction:column;align-items:center;height:100%;justify-content:flex-end}
+.bar{width:100%;max-width:42px;border-radius:4px 4px 0 0;transition:height .3s ease;min-height:2px}
+.bar-cost{background:var(--coral);opacity:.75}.bar-rev{background:var(--teal);opacity:.75}
+.bar-month{font-size:.7rem;color:var(--text-dim);margin-top:.4rem;font-weight:500}
+.chart-legend{display:flex;gap:1.25rem;margin-top:1rem;justify-content:center}
+.legend-item{display:flex;align-items:center;gap:.4rem;font-size:.8rem;color:var(--text-muted)}
+.legend-dot{width:10px;height:10px;border-radius:3px}
+.budget-input-section{padding:0 1.5rem;margin-bottom:1.25rem}
+.budget-card{background:var(--surface);border:1px solid var(--amber-border);border-radius:var(--radius);padding:1.25rem}
+.budget-row{display:grid;grid-template-columns:1fr 150px;align-items:center;gap:.6rem}
+.budget-label{font-size:.95rem;color:var(--amber);font-weight:500}
+.budget-label small{display:block;font-size:.8rem;color:var(--text-dim);font-weight:400}
+.startup-section{padding:0 1.5rem;margin-bottom:1.25rem}
+.actions{padding:1.25rem 1.5rem 3rem;display:flex;gap:.75rem;flex-wrap:wrap}
+.btn{padding:.7rem 1.1rem;border-radius:var(--radius-sm);font-family:var(--font);font-size:.85rem;font-weight:500;cursor:pointer;border:none;transition:transform .1s,opacity .15s;text-align:center;white-space:nowrap}
+.btn:active{transform:scale(.97)}
+.btn-primary{background:var(--purple);color:#0C0B0F}
+.btn-secondary{background:var(--surface2);border:1px solid var(--border);color:var(--text)}
+.btn-danger{background:var(--coral-bg);border:1px solid var(--coral-border);color:var(--coral)}
+.btn-sm{padding:.5rem .85rem;font-size:.78rem}
+.toast{position:fixed;bottom:1.5rem;left:50%;transform:translateX(-50%) translateY(100px);background:var(--surface2);border:1px solid var(--teal-border);color:var(--teal);padding:.75rem 1.5rem;border-radius:var(--radius-sm);font-size:.95rem;z-index:1000;transition:transform .3s ease;pointer-events:none}
+.toast.show{transform:translateX(-50%) translateY(0)}
+
+/* Scenario Panel */
+.scenario-panel{padding:0 1.5rem;margin-bottom:1.25rem}
+.scenario-card{background:var(--surface);border:1px solid var(--purple-border);border-radius:var(--radius);padding:1.25rem}
+.scenario-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:.85rem}
+.scenario-title{font-size:.75rem;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:var(--purple)}
+.scenario-actions{display:flex;gap:.4rem}
+.scenario-list{display:flex;flex-direction:column;gap:.5rem}
+.scenario-item{display:flex;justify-content:space-between;align-items:center;background:var(--surface2);border-radius:var(--radius-sm);padding:.7rem 1rem;cursor:pointer;border:1px solid transparent;transition:border-color .15s}
+.scenario-item:hover{border-color:var(--border-focus)}
+.scenario-item.active{border-color:var(--purple);background:var(--purple-bg)}
+.scenario-item-left{display:flex;flex-direction:column;gap:.1rem;min-width:0;flex:1}
+.scenario-item-name{font-size:.9rem;font-weight:500;color:var(--text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.scenario-item-meta{font-size:.72rem;color:var(--text-dim)}
+.scenario-item-kpi{display:flex;gap:.75rem;font-family:var(--mono);font-size:.78rem;color:var(--text-muted)}
+.scenario-item-actions{display:flex;gap:.3rem;margin-left:.5rem;flex-shrink:0}
+.scenario-empty{font-size:.85rem;color:var(--text-dim);text-align:center;padding:1rem}
+
+/* Save Dialog */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:200;display:flex;align-items:center;justify-content:center;padding:1rem;opacity:0;pointer-events:none;transition:opacity .2s}
+.modal-overlay.open{opacity:1;pointer-events:auto}
+.modal-box{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:1.5rem;width:100%;max-width:400px}
+.modal-title{font-size:1.05rem;font-weight:700;margin-bottom:1rem;color:var(--text)}
+.modal-input{width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:.65rem .85rem;font-family:var(--font);font-size:.95rem;color:var(--text);outline:none;margin-bottom:1rem}
+.modal-input:focus{border-color:var(--border-focus)}
+.modal-btns{display:flex;gap:.5rem;justify-content:flex-end}
+
+/* Compare Panel */
+.compare-wrapper{padding:0 1.5rem;margin-bottom:1.25rem}
+.compare-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden}
+.compare-table{width:100%;border-collapse:collapse;font-size:.85rem}
+.compare-table th{background:var(--surface2);padding:.6rem .85rem;text-align:left;font-weight:500;font-size:.72rem;text-transform:uppercase;letter-spacing:.08em;color:var(--text-dim);border-bottom:1px solid var(--border)}
+.compare-table th:not(:first-child){text-align:right}
+.compare-table td{padding:.55rem .85rem;border-bottom:1px solid var(--border);color:var(--text-muted)}
+.compare-table td:not(:first-child){text-align:right;font-family:var(--mono);font-size:.85rem}
+.compare-table tr:last-child td{border-bottom:none}
+.compare-table td.label-cell{color:var(--text);font-weight:500}
+.compare-table .row-highlight td{background:var(--surface2)}
+
+@media(max-width:599px){
+  .cost-row{grid-template-columns:1fr 100px 36px}.cost-row.header-row{grid-template-columns:1fr 100px 36px}
+  .cost-annual{display:none}.cost-row.header-row span:nth-child(3){display:none}
+  .header{padding:2rem 1.25rem 1.5rem}
+  .summary-grid,.section-wrapper,.revenue-section,.chart-wrapper,.budget-input-section,.startup-section,.runway-bar-container,.actions,.scenario-panel,.compare-wrapper{padding-left:1.25rem;padding-right:1.25rem}
+}
+@media(min-width:600px){.summary-grid{grid-template-columns:repeat(4,1fr)}}
+
+/* PRINT */
+@media print{
+  @page{size:A4;margin:16mm 14mm}
+  *{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important}
+  html{font-size:10.5px}
+  body{background:#fff!important;color:#1a1a1a!important}
+  .container{max-width:100%}
+  .header{position:static!important;background:#fff!important;backdrop-filter:none!important;border-bottom:2px solid #1a1a1a;padding:0 0 .75rem;margin-bottom:.75rem}
+  .header-label{color:#c0392b!important;font-size:.85rem}
+  .header-title{color:#1a1a1a!important;font-size:2.2rem}
+  .header-sub{color:#666!important;font-size:1rem}
+  .header::after{content:"Stand: " attr(data-date) " · Vertraulich";display:block;font-size:.85rem;color:#999;margin-top:.25rem}
+  .header-actions{display:none!important}
+  .summary-grid{grid-template-columns:repeat(4,1fr)!important;padding:.75rem 0;gap:.6rem}
+  .summary-card{background:#f5f5f5!important;border:1px solid #ddd!important;border-radius:6px;padding:.75rem .85rem}
+  .summary-label{color:#555!important;font-size:.75rem}
+  .summary-value{font-size:1.5rem}
+  .summary-value.val-neutral{color:#1a1a1a!important}
+  .summary-value.val-positive{color:#0a7a48!important}
+  .summary-value.val-negative{color:#c0392b!important}
+  .summary-sub{color:#888!important}
+  .runway-bar-container{padding:0 0 .75rem}
+  .runway-bar-wrapper{background:#f5f5f5!important;border:1px solid #ddd!important;border-radius:6px;padding:.75rem .85rem}
+  .runway-label{color:#555!important}
+  .runway-months.val-positive{color:#0a7a48!important}
+  .runway-months.val-amber{color:#9a6800!important}
+  .runway-months.val-negative{color:#c0392b!important}
+  .runway-track{background:#e0e0e0!important;height:8px}
+  .runway-marks span{color:#999!important}
+  .budget-input-section{padding:0;margin-bottom:.75rem}
+  .budget-card{background:#fffcf2!important;border:1px solid #d4b84a!important;border-radius:6px;padding:.75rem .85rem}
+  .budget-label{color:#7a5a00!important}
+  .budget-label small{color:#888!important}
+  .section-wrapper,.startup-section{padding:0;margin-bottom:.6rem}
+  .section-head{padding:.75rem 0 .35rem}
+  .section-title{color:#555!important;font-size:.7rem}
+  .section-total{color:#1a1a1a!important;font-size:1rem}
+  .cost-table{background:#fff!important;border:1px solid #ccc!important;border-radius:6px}
+  .cost-row{border-bottom:1px solid #eee!important;padding:.5rem .85rem;grid-template-columns:1fr 100px 90px!important}
+  .cost-row.header-row{background:#f0f0f0!important;grid-template-columns:1fr 100px 90px!important}
+  .cost-row.header-row span{color:#555!important}
+  .cost-name{color:#1a1a1a!important;font-size:.95rem}
+  .cost-name small{color:#777!important;font-size:.8rem}
+  .cost-annual{color:#1a1a1a!important;font-size:.9rem;display:block!important}
+  .cost-input{background:transparent!important;border:none!important;color:#1a1a1a!important;font-size:.95rem;padding:0}
+  .delete-btn,.add-row-btn,.actions,.toast,.scenario-panel,.compare-wrapper{display:none!important}
+  .revenue-section{padding:0;margin-bottom:.75rem}
+  .revenue-card{background:#fff!important;border:1px solid #ccc!important;border-radius:6px;padding:.85rem}
+  .rev-row{border-bottom:1px solid #eee!important;grid-template-columns:1fr 120px}
+  .rev-label{color:#1a1a1a!important}
+  .rev-label small{color:#777!important}
+  .chart-wrapper{padding:0 0 .75rem}
+  .chart-card{background:#f8f8f8!important;border:1px solid #ccc!important;border-radius:6px;padding:1rem}
+  .chart-title{color:#555!important}
+  .bar-cost{background:#d44!important;opacity:.85!important}
+  .bar-rev{background:#0a7a48!important;opacity:.85!important}
+  .bar-month{color:#555!important}
+  .legend-item{color:#555!important}
+  .section-wrapper,.startup-section,.revenue-section,.chart-wrapper{page-break-inside:avoid}
+  .print-footer{display:block!important;border-top:1px solid #ccc;padding-top:.6rem;margin-top:1rem;font-size:.8rem;color:#aaa;text-align:center}
+}
+.print-footer{display:none}
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="header" id="printHeader">
+    <div class="header-label">Business Plan</div>
+    <div class="header-title">CORTEX GmbH — Jahr 1</div>
+    <div class="header-sub">Kostenstruktur, Umsatzplanung & Runway-Analyse</div>
+    <div class="header-actions">
+      <button class="btn btn-primary btn-sm" onclick="openSaveModal()">Szenario speichern</button>
+      <button class="btn btn-secondary btn-sm" onclick="downloadCSV()">CSV Export</button>
+      <button class="btn btn-secondary btn-sm" onclick="printPDF()">PDF Export</button>
+    </div>
+  </div>
+
+  <!-- Scenario Panel -->
+  <div class="scenario-panel">
+    <div class="scenario-card">
+      <div class="scenario-header">
+        <span class="scenario-title">Gespeicherte Szenarien</span>
+        <div class="scenario-actions">
+          <button class="btn btn-secondary btn-sm" onclick="toggleCompare()" id="compareBtn" style="display:none">Vergleichen</button>
+        </div>
+      </div>
+      <div class="scenario-list" id="scenarioList">
+        <div class="scenario-empty">Noch keine Szenarien gespeichert. Passe die Werte an und klicke "Szenario speichern".</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Compare Table (hidden by default) -->
+  <div class="compare-wrapper" id="compareWrapper" style="display:none">
+    <div class="compare-card">
+      <table class="compare-table" id="compareTable"></table>
+    </div>
+  </div>
+
+  <div class="summary-grid">
+    <div class="summary-card"><div class="summary-label">Kosten / Monat</div><div class="summary-value val-neutral" id="sumMonthly">—</div></div>
+    <div class="summary-card"><div class="summary-label">Kosten / Jahr</div><div class="summary-value val-neutral" id="sumAnnual">—</div></div>
+    <div class="summary-card"><div class="summary-label">Umsatz / Monat</div><div class="summary-value val-neutral" id="sumRevMonth">—</div><div class="summary-sub" id="sumRevSub"></div></div>
+    <div class="summary-card"><div class="summary-label">Ergebnis / Jahr</div><div class="summary-value" id="sumResult">—</div></div>
+  </div>
+
+  <div class="runway-bar-container"><div class="runway-bar-wrapper">
+    <div class="runway-label-row"><span class="runway-label">Runway (bei Startkapital)</span><span class="runway-months" id="runwayMonths">—</span></div>
+    <div class="runway-track"><div class="runway-fill" id="runwayFill" style="width:0%"></div></div>
+    <div class="runway-marks"><span>0</span><span>6</span><span>12</span><span>18</span><span>24 Mon.</span></div>
+  </div></div>
+
+  <div class="budget-input-section"><div class="budget-card"><div class="budget-row">
+    <div class="budget-label">Startkapital von Diamir<small>Einmalige Anschubfinanzierung</small></div>
+    <input type="number" class="cost-input" id="startBudget" value="300000" step="10000" oninput="recalc()">
+  </div></div></div>
+
+  <div class="section-wrapper"><div class="section-head"><span class="section-title">Personalkosten (brutto inkl. AG-Anteil)</span><span class="section-total" id="totalPersonnel">—</span></div>
+    <div class="cost-table" id="personnelTable"><div class="cost-row header-row"><span>Rolle</span><span style="text-align:right">€ / Monat</span><span style="text-align:right">€ / Jahr</span><span></span></div></div>
+    <button class="add-row-btn" onclick="addRow('personnel')">+ Position hinzufügen</button></div>
+
+  <div class="section-wrapper"><div class="section-head"><span class="section-title">LLM, AI-Tools & Lizenzen</span><span class="section-total" id="totalTools">—</span></div>
+    <div class="cost-table" id="toolsTable"><div class="cost-row header-row"><span>Tool / Lizenz</span><span style="text-align:right">€ / Monat</span><span style="text-align:right">€ / Jahr</span><span></span></div></div>
+    <button class="add-row-btn" onclick="addRow('tools')">+ Tool hinzufügen</button></div>
+
+  <div class="section-wrapper"><div class="section-head"><span class="section-title">Infrastruktur & Sonstiges</span><span class="section-total" id="totalInfra">—</span></div>
+    <div class="cost-table" id="infraTable"><div class="cost-row header-row"><span>Posten</span><span style="text-align:right">€ / Monat</span><span style="text-align:right">€ / Jahr</span><span></span></div></div>
+    <button class="add-row-btn" onclick="addRow('infra')">+ Posten hinzufügen</button></div>
+
+  <div class="startup-section"><div class="section-head"><span class="section-title">Einmalkosten Gründung</span><span class="section-total" id="totalStartup">—</span></div>
+    <div class="cost-table" id="startupTable"><div class="cost-row header-row"><span>Posten</span><span style="text-align:right">Betrag €</span><span></span><span></span></div></div>
+    <button class="add-row-btn" onclick="addRow('startup')">+ Posten hinzufügen</button></div>
+
+  <div class="revenue-section"><div class="section-head" style="padding:0 0 .6rem"><span class="section-title">Umsatzplanung</span></div>
+    <div class="revenue-card">
+      <div class="rev-row"><div class="rev-label">Projekte / Monat (Ø)<small>Durchschnittliche Anzahl laufender Projekte</small></div><input type="number" class="cost-input" id="revProjects" value="1" step="0.5" min="0" oninput="recalc()"></div>
+      <div class="rev-row"><div class="rev-label">Ø Projektvolumen (€)<small>Pro Projekt, Festpreis / Deliverables</small></div><input type="number" class="cost-input" id="revVolume" value="15000" step="1000" oninput="recalc()"></div>
+      <div class="rev-row"><div class="rev-label">Ramp-up Monate<small>Monate bis erstes Projekt Umsatz bringt</small></div><input type="number" class="cost-input" id="revRampup" value="3" step="1" min="0" max="12" oninput="recalc()"></div>
+    </div></div>
+
+  <div class="chart-wrapper"><div class="chart-card">
+    <div class="chart-title">Kosten vs. Umsatz — 12 Monate Projektion</div>
+    <div class="bar-chart" id="barChart"></div>
+    <div class="chart-legend"><div class="legend-item"><div class="legend-dot" style="background:var(--coral)"></div>Monatliche Kosten</div><div class="legend-item"><div class="legend-dot" style="background:var(--teal)"></div>Monatlicher Umsatz</div></div>
+  </div></div>
+
+  <div class="actions">
+    <button class="btn btn-primary" onclick="openSaveModal()">Szenario speichern</button>
+    <button class="btn btn-secondary" onclick="downloadCSV()">CSV</button>
+    <button class="btn btn-secondary" onclick="printPDF()">PDF</button>
+    <button class="btn btn-secondary" onclick="resetAll()">Zurücksetzen</button>
+  </div>
+  <div class="print-footer">CORTEX GmbH — Business Plan Jahr 1 · Vertraulich · <span id="printDate"></span></div>
+</div>
+
+<!-- Save Modal -->
+<div class="modal-overlay" id="saveModal">
+  <div class="modal-box">
+    <div class="modal-title">Szenario speichern</div>
+    <input type="text" class="modal-input" id="scenarioNameInput" placeholder="z.B. Lean Start, Full Team, Optimistisch..." autofocus>
+    <div class="modal-btns">
+      <button class="btn btn-secondary btn-sm" onclick="closeSaveModal()">Abbrechen</button>
+      <button class="btn btn-primary btn-sm" onclick="saveScenario()">Speichern</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const DEFAULTS={
+  personnel:[{name:'Hannes (CTO)',note:'Vollzeit, inkl. AG-Anteil',monthly:7500},{name:'Lorenz (CEO)',note:'Vollzeit, inkl. AG-Anteil',monthly:7500},{name:'Sales Representative',note:'Ab Monat 2–3, Vollzeit',monthly:4500},{name:'AI Engineer',note:'Ab Bedarf (Projekt 2+)',monthly:0},{name:'Assistenz Sales',note:'Teilzeit ~15h/Woche',monthly:1200}],
+  tools:[{name:'Claude (Anthropic)',note:'Team Plan + API Tokens',monthly:400},{name:'OpenAI API',note:'GPT-4o, Embeddings, Codex',monthly:300},{name:'Azure OpenAI',note:'DSGVO-konform, EU Region',monthly:500},{name:'Cursor / Windsurf',note:'Coding Agents, Team Seats',monthly:100},{name:'n8n Cloud',note:'Workflow Automation',monthly:50},{name:'GitHub / GitLab',note:'Repos, CI/CD Pipelines',monthly:40}],
+  infra:[{name:'Server / Hosting',note:'Netcup, Hetzner, AWS',monthly:200},{name:'Domain & DNS',note:'cortex.at etc.',monthly:10},{name:'Büro / Coworking',note:'Optional, flexibel',monthly:0},{name:'Steuerberatung',note:'Laufend, monatlich',monthly:400},{name:'Versicherungen',note:'Berufshaftpflicht etc.',monthly:150},{name:'Reisekosten',note:'Wien, Graz, Linz, DACH',monthly:500},{name:'Marketing & Branding',note:'Website, Content, Events',monthly:300}],
+  startup:[{name:'GmbH-Gründung + Notar',note:'',amount:3000},{name:'Rechtsberatung Gesellschaftsvertrag',note:'',amount:4000},{name:'Steuerberatung Setup',note:'',amount:1500},{name:'Branding / Corporate Design',note:'',amount:2500}]
+};
+let DATA=JSON.parse(JSON.stringify(DEFAULTS));
+
+function fmt(n){return new Intl.NumberFormat('de-AT',{style:'currency',currency:'EUR',maximumFractionDigits:0}).format(n)}
+function fmtShort(n){return n>=1000?(Math.round(n/100)/10)+'k':n+''}
+
+// === SCENARIO MANAGEMENT ===
+function getScenarios(){try{return JSON.parse(localStorage.getItem('cortex_scenarios')||'[]')}catch(e){return[]}}
+function saveScenarios(arr){localStorage.setItem('cortex_scenarios',JSON.stringify(arr))}
+
+function getSnapshot(){
+  return{
+    data:JSON.parse(JSON.stringify(DATA)),
+    budget:parseFloat(document.getElementById('startBudget').value)||0,
+    projects:parseFloat(document.getElementById('revProjects').value)||0,
+    volume:parseFloat(document.getElementById('revVolume').value)||0,
+    rampup:parseInt(document.getElementById('revRampup').value)||0,
+  };
+}
+
+function calcKPIs(snap){
+  const d=snap.data;
+  const pT=d.personnel.reduce((s,i)=>s+(i.monthly||0),0);
+  const tT=d.tools.reduce((s,i)=>s+(i.monthly||0),0);
+  const iT=d.infra.reduce((s,i)=>s+(i.monthly||0),0);
+  const sT=d.startup.reduce((s,i)=>s+(i.amount||0),0);
+  const mo=pT+tT+iT,an=mo*12+sT;
+  const rm=snap.projects*snap.volume;
+  const actM=Math.max(0,12-snap.rampup);
+  const ra=rm*actM,res=ra-an;
+  let rw=0,bal=snap.budget-sT;
+  for(let m=1;m<=24;m++){bal=bal-mo+(m>snap.rampup?rm:0);if(bal>=0)rw=m;else break}
+  if(bal>=0)rw=24;
+  return{monthly:mo,annual:an,revMonth:rm,revAnnual:ra,result:res,runway:rw,startupCosts:sT};
+}
+
+function openSaveModal(){
+  document.getElementById('saveModal').classList.add('open');
+  const inp=document.getElementById('scenarioNameInput');
+  inp.value='';inp.focus();
+}
+function closeSaveModal(){document.getElementById('saveModal').classList.remove('open')}
+
+document.getElementById('scenarioNameInput').addEventListener('keydown',e=>{if(e.key==='Enter')saveScenario()});
+
+function saveScenario(){
+  const name=document.getElementById('scenarioNameInput').value.trim();
+  if(!name){showToast('Bitte einen Namen eingeben');return}
+  const scenarios=getScenarios();
+  const snap=getSnapshot();
+  const kpis=calcKPIs(snap);
+  scenarios.push({id:Date.now(),name,snap,kpis,date:new Date().toLocaleDateString('de-AT',{day:'2-digit',month:'2-digit',year:'numeric'})});
+  saveScenarios(scenarios);
+  closeSaveModal();
+  renderScenarios();
+  showToast('Szenario "'+name+'" gespeichert');
+}
+
+function loadScenario(id){
+  const scenarios=getScenarios();
+  const sc=scenarios.find(s=>s.id===id);
+  if(!sc)return;
+  DATA=JSON.parse(JSON.stringify(sc.snap.data));
+  document.getElementById('startBudget').value=sc.snap.budget;
+  document.getElementById('revProjects').value=sc.snap.projects;
+  document.getElementById('revVolume').value=sc.snap.volume;
+  document.getElementById('revRampup').value=sc.snap.rampup;
+  renderAll();
+  renderScenarios(id);
+  showToast('"'+sc.name+'" geladen');
+}
+
+function deleteScenario(id,e){
+  e.stopPropagation();
+  const scenarios=getScenarios().filter(s=>s.id!==id);
+  saveScenarios(scenarios);
+  renderScenarios();
+  showToast('Szenario gelöscht');
+}
+
+function renderScenarios(activeId){
+  const list=document.getElementById('scenarioList');
+  const scenarios=getScenarios();
+  const cmpBtn=document.getElementById('compareBtn');
+  cmpBtn.style.display=scenarios.length>=2?'':'none';
+
+  if(!scenarios.length){
+    list.innerHTML='<div class="scenario-empty">Noch keine Szenarien gespeichert. Passe die Werte an und klicke "Szenario speichern".</div>';
+    return;
+  }
+  list.innerHTML=scenarios.map(sc=>{
+    const k=sc.kpis;
+    const isActive=sc.id===activeId;
+    return`<div class="scenario-item${isActive?' active':''}" onclick="loadScenario(${sc.id})">
+      <div class="scenario-item-left">
+        <div class="scenario-item-name">${sc.name}</div>
+        <div class="scenario-item-meta">${sc.date} · Startkapital ${fmt(sc.snap.budget)}</div>
+        <div class="scenario-item-kpi">
+          <span>${fmt(k.monthly)}/m</span>
+          <span style="color:${k.result>=0?'var(--green)':'var(--red)'}">Ergebnis ${fmt(k.result)}</span>
+          <span>${k.runway>=24?'24+':k.runway} Mon.</span>
+        </div>
+      </div>
+      <div class="scenario-item-actions">
+        <button class="btn btn-danger btn-sm" onclick="deleteScenario(${sc.id},event)" style="padding:.35rem .6rem;font-size:.7rem">×</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function toggleCompare(){
+  const w=document.getElementById('compareWrapper');
+  if(w.style.display==='none'){
+    w.style.display='';
+    renderCompare();
+  }else{
+    w.style.display='none';
+  }
+}
+
+function renderCompare(){
+  const scenarios=getScenarios();
+  if(scenarios.length<2)return;
+  const table=document.getElementById('compareTable');
+  const headers=['<th>Kennzahl</th>',...scenarios.map(s=>`<th>${s.name}</th>`)].join('');
+  const rows=[
+    {label:'Kosten / Monat',key:'monthly'},
+    {label:'Kosten / Jahr',key:'annual'},
+    {label:'Umsatz / Monat',key:'revMonth'},
+    {label:'Ergebnis / Jahr',key:'result',highlight:true},
+    {label:'Runway',key:'runway',isRunway:true},
+    {label:'Startkapital',key:'budget',isBudget:true},
+  ];
+  const body=rows.map(r=>{
+    const cls=r.highlight?' class="row-highlight"':'';
+    const cells=scenarios.map(s=>{
+      if(r.isRunway)return`<td>${s.kpis.runway>=24?'24+':s.kpis.runway} Mon.</td>`;
+      if(r.isBudget)return`<td>${fmt(s.snap.budget)}</td>`;
+      const v=s.kpis[r.key];
+      const color=r.highlight?(v>=0?'color:var(--green)':'color:var(--red)'):'';
+      return`<td style="${color}">${fmt(v)}</td>`;
+    }).join('');
+    return`<tr${cls}><td class="label-cell">${r.label}</td>${cells}</tr>`;
+  }).join('');
+  table.innerHTML=`<thead><tr>${headers}</tr></thead><tbody>${body}</tbody>`;
+}
+
+// === CORE LOGIC ===
+function renderRow(sec,idx,item){
+  const isS=sec==='startup',val=isS?(item.amount||0):(item.monthly||0);
+  const row=document.createElement('div');row.className='cost-row';
+  row.innerHTML=`<div class="cost-name">${item.name}<small>${item.note||''}</small></div>
+    <input type="number" class="cost-input" value="${val}" step="${isS?500:100}" min="0" oninput="updateVal('${sec}',${idx},this.value)">
+    <span class="cost-annual">${isS?'':fmt(val*12)}</span>
+    <button class="delete-btn" onclick="deleteRow('${sec}',${idx})" title="Entfernen">×</button>`;
+  document.getElementById(sec+'Table').appendChild(row);
+}
+function renderAll(){
+  ['personnel','tools','infra','startup'].forEach(s=>{const t=document.getElementById(s+'Table'),h=t.querySelector('.header-row');t.innerHTML='';t.appendChild(h);DATA[s].forEach((item,i)=>renderRow(s,i,item))});recalc();
+}
+function updateVal(s,i,v){v=parseFloat(v)||0;if(s==='startup')DATA[s][i].amount=v;else DATA[s][i].monthly=v;recalc()}
+function deleteRow(s,i){DATA[s].splice(i,1);renderAll()}
+function addRow(s){const d={personnel:{name:'Neue Position',note:'',monthly:0},tools:{name:'Neues Tool',note:'',monthly:0},infra:{name:'Neuer Posten',note:'',monthly:0},startup:{name:'Neuer Posten',note:'',amount:0}};DATA[s].push({...d[s]});renderAll()}
+
+function recalc(){
+  const snap=getSnapshot();
+  const k=calcKPIs(snap);
+  document.getElementById('sumMonthly').textContent=fmt(k.monthly);
+  document.getElementById('sumAnnual').textContent=fmt(k.annual);
+  document.getElementById('sumRevMonth').textContent=fmt(k.revMonth);
+  document.getElementById('sumRevSub').textContent=`ab Monat ${snap.rampup+1}`;
+  const rEl=document.getElementById('sumResult');
+  rEl.textContent=fmt(k.result);rEl.className='summary-value '+(k.result>=0?'val-positive':'val-negative');
+  const pT=DATA.personnel.reduce((s,i)=>s+(i.monthly||0),0);
+  const tT=DATA.tools.reduce((s,i)=>s+(i.monthly||0),0);
+  const iT=DATA.infra.reduce((s,i)=>s+(i.monthly||0),0);
+  const sT=DATA.startup.reduce((s,i)=>s+(i.amount||0),0);
+  document.getElementById('totalPersonnel').textContent=fmt(pT)+' /m';
+  document.getElementById('totalTools').textContent=fmt(tT)+' /m';
+  document.getElementById('totalInfra').textContent=fmt(iT)+' /m';
+  document.getElementById('totalStartup').textContent=fmt(sT);
+  const rwP=Math.min(100,(k.runway/24)*100),rwF=document.getElementById('runwayFill');
+  rwF.style.width=rwP+'%';rwF.style.background=k.runway>=18?'var(--teal)':k.runway>=12?'var(--amber)':'var(--coral)';
+  const rwT=document.getElementById('runwayMonths');
+  rwT.textContent=k.runway>=24?'24+ Mon.':k.runway+' Mon.';
+  rwT.className='runway-months '+(k.runway>=18?'val-positive':k.runway>=12?'val-amber':'val-negative');
+  ['personnel','tools','infra'].forEach(sec=>{document.getElementById(sec+'Table').querySelectorAll('.cost-row:not(.header-row)').forEach((row,i)=>{const sp=row.querySelector('.cost-annual');if(sp&&DATA[sec][i])sp.textContent=fmt((DATA[sec][i].monthly||0)*12)})});
+  renderChart(k.monthly,k.revMonth,snap.rampup);
+}
+
+function renderChart(mo,rm,ramp){
+  const c=document.getElementById('barChart');c.innerHTML='';
+  const ms=['Jan','Feb','Mär','Apr','Mai','Jun','Jul','Aug','Sep','Okt','Nov','Dez'];
+  const mx=Math.max(mo,rm,1);
+  for(let i=0;i<12;i++){const rv=i>=ramp?rm:0,cH=Math.round((mo/mx)*88),rH=Math.round((rv/mx)*88);
+    const g=document.createElement('div');g.className='bar-group';
+    g.innerHTML=`<div style="display:flex;gap:2px;align-items:flex-end;width:100%;justify-content:center;flex:1"><div class="bar bar-cost" style="height:${cH}%;width:45%;max-width:22px"></div><div class="bar bar-rev" style="height:${rH}%;width:45%;max-width:22px"></div></div><div class="bar-month">${ms[i]}</div>`;
+    c.appendChild(g);
+  }
+}
+
+function downloadCSV(){
+  let csv='Kategorie;Posten;Notiz;Monatlich (€);Jährlich (€)\n';
+  DATA.personnel.forEach(i=>csv+=`Personal;${i.name};${i.note||''};${i.monthly};${i.monthly*12}\n`);
+  DATA.tools.forEach(i=>csv+=`Tools;${i.name};${i.note||''};${i.monthly};${i.monthly*12}\n`);
+  DATA.infra.forEach(i=>csv+=`Infra;${i.name};${i.note||''};${i.monthly};${i.monthly*12}\n`);
+  csv+='\nEinmalkosten;Posten;Betrag;\n';DATA.startup.forEach(i=>csv+=`Einmal;${i.name};${i.amount};\n`);
+  const snap=getSnapshot(),k=calcKPIs(snap);
+  csv+=`\nParameter;Wert;\nProjekte/Monat;${snap.projects};\nProjektvolumen;${snap.volume};\nRamp-up;${snap.rampup};\nStartkapital;${snap.budget};\n`;
+  csv+=`\nZusammenfassung;Wert;\nKosten/Monat;${k.monthly};\nKosten/Jahr;${k.annual};\nUmsatz/Monat;${k.revMonth};\nErgebnis/Jahr;${k.result};\nRunway;${k.runway};\n`;
+  const blob=new Blob(['\uFEFF'+csv],{type:'text/csv;charset=utf-8;'});
+  const url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download='cortex_businessplan.csv';a.click();URL.revokeObjectURL(url);
+  showToast('CSV heruntergeladen');
+}
+
+function printPDF(){
+  const d=new Date().toLocaleDateString('de-AT',{day:'2-digit',month:'2-digit',year:'numeric'});
+  document.getElementById('printHeader').setAttribute('data-date',d);
+  document.getElementById('printDate').textContent=d;
+  window.print();
+}
+
+function resetAll(){
+  DATA=JSON.parse(JSON.stringify(DEFAULTS));
+  document.getElementById('startBudget').value=300000;
+  document.getElementById('revProjects').value=1;
+  document.getElementById('revVolume').value=15000;
+  document.getElementById('revRampup').value=3;
+  renderAll();showToast('Zurückgesetzt');
+}
+
+function showToast(m){const t=document.getElementById('toast');t.textContent=m;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2000)}
+
+renderAll();
+renderScenarios();
+</script>
+</body>
+</html>
