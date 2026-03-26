@@ -42,6 +42,11 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);line-height:
 .cost-row.header-row span{font-size:.7rem;text-transform:uppercase;letter-spacing:.08em;color:var(--text-dim);font-weight:500}
 .cost-name{font-size:.95rem;color:var(--text);font-weight:500}
 .cost-name small{display:block;font-size:.8rem;color:var(--text-dim);font-weight:400;margin-top:.1rem}
+.name-edit,.note-edit{background:none;border:none;border-bottom:1px dashed transparent;font-family:var(--font);outline:none;padding:0 0 2px;transition:border-color .15s;width:100%;min-width:60px}
+.name-edit{font-size:.95rem;color:var(--text);font-weight:500}
+.note-edit{font-size:.8rem;color:var(--text-dim);font-weight:400;margin-top:.15rem;display:block}
+.name-edit:hover,.note-edit:hover{border-bottom-color:var(--text-dim)}
+.name-edit:focus,.note-edit:focus{border-bottom-color:var(--purple);color:var(--text)}
 .cost-input{background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:.55rem .65rem;font-family:var(--mono);font-size:.95rem;color:var(--text);text-align:right;width:100%;outline:none;transition:border-color .15s;-moz-appearance:textfield}
 .cost-input::-webkit-inner-spin-button,.cost-input::-webkit-outer-spin-button{-webkit-appearance:none}
 .cost-input:focus{border-color:var(--border-focus)}
@@ -159,6 +164,7 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);line-height:
   .cost-row{border-bottom:1px solid #eee!important;padding:.5rem .85rem;grid-template-columns:1fr 100px 90px!important}
   .cost-row.header-row{background:#f0f0f0!important;grid-template-columns:1fr 100px 90px!important}
   .cost-row.header-row span{color:#555!important}.cost-name{color:#1a1a1a!important;font-size:.95rem}.cost-name small{color:#777!important;font-size:.8rem}
+  .name-edit{color:#1a1a1a!important;font-size:.95rem;border:none!important}.note-edit{color:#777!important;font-size:.8rem;border:none!important}
   .cost-annual{color:#1a1a1a!important;font-size:.9rem;display:block!important}
   .cost-input{background:transparent!important;border:none!important;color:#1a1a1a!important;font-size:.95rem;padding:0}
   .delete-btn,.add-row-btn,.actions,.toast,.scenario-panel,.compare-wrapper{display:none!important}
@@ -333,18 +339,18 @@ function renderRow(sec, idx, item){
   const row = document.createElement('div');
   row.className = 'cost-row';
 
-  let nameHTML = `<div class="cost-name">${item.name}<small>${item.note||''}`;
+  let nameHTML = `<div class="cost-name">
+    <input type="text" class="name-edit" value="${item.name}" placeholder="Bezeichnung…" oninput="updateName('${sec}',${idx},this.value)">
+    <input type="text" class="note-edit" value="${item.note||''}" placeholder="Notiz…" oninput="updateNote('${sec}',${idx},this.value)">`;
   if(sec==='personnel'){
-    nameHTML += `</small>
+    nameHTML += `
       <label class="salary-toggle" onclick="event.stopPropagation()">
         <input type="checkbox" class="salary-cb" onchange="toggleSalary('${sec}-${idx}')" ${item.showSalary?'checked':''}>
         <span class="salary-label">Gehalt anzeigen</span>
       </label>
-      ${salaryBreakdownHTML(val, sec+'-'+idx)}
-    </div>`;
-  } else {
-    nameHTML += `</small></div>`;
+      ${salaryBreakdownHTML(val, sec+'-'+idx)}`;
   }
+  nameHTML += `</div>`;
 
   row.innerHTML = `${nameHTML}
     <input type="number" class="cost-input" value="${val}" step="${isS?500:100}" min="0" oninput="updateVal('${sec}',${idx},this.value)">
@@ -353,7 +359,6 @@ function renderRow(sec, idx, item){
 
   document.getElementById(sec+'Table').appendChild(row);
 
-  // Restore checkbox state
   if(sec==='personnel' && item.showSalary){
     const det = row.querySelector('.salary-detail');
     if(det) det.classList.add('open');
@@ -388,6 +393,9 @@ function updateVal(s,i,v){
 }
 
 function deleteRow(s,i){DATA[s].splice(i,1);renderAll()}
+
+function updateName(s,i,v){DATA[s][i].name=v}
+function updateNote(s,i,v){DATA[s][i].note=v}
 
 function addRow(s){
   const d={
